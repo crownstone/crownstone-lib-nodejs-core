@@ -1,0 +1,39 @@
+{
+  "name": "bluenet-nodejs-lib-core",
+  "version": "0.3.0",
+  "scripts": {
+    "start": "tsc -watch",
+    "test": "jest --useStderr --clearMocks",
+    "cleanTest": "jest --useStderr --no-cache --clearMocks"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "aes-js": "^3.1.1"
+  },
+  "devDependencies": {
+    "jest": "^25.1.0",
+    "@types/jest": "^25.1.1",
+    "@types/node": "^13.5.3",
+    "typescript": "3.7.5"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "./tests/jest_preprocessor.js"
+    },
+    "testMatch": [
+      "**/tests/*.test.+(ts|tsx|js)"
+    ],
+    "setupFiles": [
+      "./tests/jest_setup.js"
+    ],
+    "collectCoverage": true,
+    "collectCoverageFrom": []
+  },
+  "license": "MIT"
+}

@@ -122,7 +122,7 @@ export class ServiceData {
     return this.validData;
   }
 
-  getJSON() {
+  getJSON() : ServiceDataJson {
     let errorsDictionary = new CrownstoneErrors(this.errorsBitmask).getJSON();
     let obj = {
       opCode                    : this.opCode,

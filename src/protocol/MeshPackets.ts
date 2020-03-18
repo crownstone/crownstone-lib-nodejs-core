@@ -24,7 +24,7 @@ export class StoneMultiSwitchPacket {
 export class MeshMultiSwitchPacket {
   packets = [];
 
-  constructor(packets : [StoneMultiSwitchPacket]) {
+  constructor(packets : StoneMultiSwitchPacket[]) {
     this.packets = packets;
   }
 

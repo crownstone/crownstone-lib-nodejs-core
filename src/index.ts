@@ -15,30 +15,17 @@ import {BluenetError, } from "./protocol/BluenetError"
 import {ControlType, StateType, DeviceType, ResultValue, ProcessType, BroadcastTypes, } from "./protocol/BluenetTypes"
 import {DeviceCharacteristics, CrownstoneCharacteristics, SetupCharacteristics, DFUCharacteristics, } from "./protocol/Characteristics"
 import {ControlPacketsGenerator, } from "./protocol/ControlPackets"
+import {StoneMultiSwitchPacket, MeshMultiSwitchPacket, } from "./protocol/MeshPackets"
 import {CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID, DFU_ADVERTISEMENT_SERVICE_UUID, CSServices, DFUServices, ServiceUUIDArray, } from "./protocol/Services"
-import {DataStepper, } from "./util/DataStepper"
+import {DataStepper, DataWriter, } from "./util/DataStepper"
 import {EncryptionHandler, SessionData, EncryptedPackage, } from "./util/EncryptionHandler"
 import {EventBusClass, } from "./util/EventBus"
+import {Logger, LOGv, LOGd, LOGi, LOG, LOGw, LOGe, } from "./util/logging/Log"
 import {NotificationMerger, } from "./util/NotificationMerger"
 import {PublicUtil, } from "./util/PublicUtil"
 import {reconstructTimestamp, } from "./util/Timestamp"
 import {Util, } from "./util/Util"
-import {Logger, LOGv, LOGd, LOGi, LOG, LOGw, LOGe, } from "./util/logging/Log"
 
-
-
-interface keyMap {
-  adminKey        : string,
-  memberKey       : string,
-  basicKey        : string,
-  serviceDataKey  : string,
-  localizationKey : string,
-  meshNetworkKey  : string,
-  meshAppKey      : string,
-}
-
-
-type PromiseCallback = (any) => Promise<any>
 
 
 export {
@@ -62,6 +49,7 @@ export {
   DFUServices,
   DFU_ADVERTISEMENT_SERVICE_UUID,
   DataStepper,
+  DataWriter,
   DeviceCharacteristics,
   DeviceType,
   EncryptedPackage,
@@ -77,6 +65,7 @@ export {
   LOGw,
   LogConfig,
   Logger,
+  MeshMultiSwitchPacket,
   NotificationMerger,
   ProcessType,
   PublicUtil,
@@ -87,6 +76,7 @@ export {
   SessionData,
   SetupCharacteristics,
   StateType,
+  StoneMultiSwitchPacket,
   UserLevel,
   Util,
   parseOpCode3,

@@ -1,6 +1,7 @@
 import {ControlType} from './BluenetTypes';
 import {ControlPacket, FactoryResetPacket} from "./BasePackets";
 import {Util} from "../util/Util";
+import { DataWriter } from '../util/DataStepper';
 
 export class ControlPacketsGenerator {
 
@@ -14,7 +15,7 @@ export class ControlPacketsGenerator {
     return new FactoryResetPacket().getPacket()
   }
 
-  static getSwitchStatePacket({switchState}: { switchState: any }) {
+  static getSwitchStatePacket(switchState: number) {
     let convertedSwitchState = Util.bound0_100(switchState);
     return new ControlPacket(ControlType.SWITCH).loadUInt8(convertedSwitchState).getPacket()
   }
@@ -82,6 +83,33 @@ export class ControlPacketsGenerator {
     }
     return new ControlPacket(ControlType.LOCK_SWITCH).loadUInt8(lockByte).getPacket()
   }
+
+  static getRegisterTrackedDevicesPacket(
+  trackingNumber:number,
+  locationUID:number,
+  profileId:number,
+  rssiOffset:number,
+  ignoreForPresence:boolean,
+  tapToToggleEnabled:boolean,
+  deviceToken:number,
+  ttlMinutes:number) {
+    let data = new DataWriter(11);
+    data.putUInt16(trackingNumber);
+    data.putUInt8(locationUID);
+    data.putUInt8(profileId);
+    data.putUInt8(rssiOffset);
+
+    let flags = 0;
+    if (ignoreForPresence)  { flags += 1 << 1; }
+    if (tapToToggleEnabled) { flags += 1 << 2; }
+
+    data.putUInt8(flags)
+    data.putUInt24(deviceToken);
+    data.putUInt16(ttlMinutes);
+
+    return new ControlPacket(ControlType.REGISTER_TRACKED_DEVICE).loadBuffer(data.getBuffer()).getPacket()
+  }
+
 
   static getSetupPacket(type, crownstoneId, adminKey : Buffer, memberKey : Buffer, guestKey : Buffer, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
     let prefix = Buffer.alloc(2);

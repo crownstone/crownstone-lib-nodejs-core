@@ -391,14 +391,14 @@ export const Util = {
     return true;
   },
 
-  promiseBatchPerformer: function(arr : any[], method : PromiseCallback) {
+  promiseBatchPerformer: function(arr : any[], method : PromiseCallback) : Promise<void> {
     if (arr.length === 0) {
       return new Promise((resolve, reject) => { resolve() });
     }
     return Util._promiseBatchPerformer(arr, 0, method);
   },
 
-  _promiseBatchPerformer: function(arr : any[], index : number, method : PromiseCallback) {
+  _promiseBatchPerformer: function(arr : any[], index : number, method : PromiseCallback) : Promise<void>  {
     return new Promise((resolve, reject) => {
       if (index < arr.length) {
         method(arr[index])

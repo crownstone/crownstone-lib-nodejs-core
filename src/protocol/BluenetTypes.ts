@@ -25,7 +25,8 @@ export const ControlType = {
   REMOVE_BEHAVIOUR           : 62,
   GET_BEHAVIOUR              : 63,
   GET_BEHAVIOUR_INDICES      : 64,
-  BEHAVIOUR_HANDLER_SETTINGS : 65,
+  GET_BEHAVIOUR_DEBUG        : 69,
+  REGISTER_TRACKED_DEVICE    : 70,
   UNSPECIFIED                : 65535
 };
 

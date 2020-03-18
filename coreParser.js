@@ -3,6 +3,8 @@
  * @type {any}
  */
 
+let isWin = process.platform === "win32";
+
 let fs = require( 'fs' );
 let path = require( 'path' );
 let startPath = "./dist";
@@ -11,6 +13,8 @@ let requireList = ''
 let exportContent = []
 
 let declarations = ''
+
+let separator = isWin ? "\\" : "/"
 
 let parsePath = function(dirPath) {
   let files = fs.readdirSync( dirPath )
@@ -54,22 +58,26 @@ let parsePathDeclarations = function(dirPath) {
 
 
 let parseFileDeclarations = function(filePath) {
-  let filenameArr = filePath.split("/");
+  let filenameArr = filePath.split(separator);
   let filename = filenameArr[filenameArr.length-1].replace(".d.ts","").replace(/[^0-9a-zA-Z]/g,'_');
 
   declarations += fs.readFileSync(filePath) + '\n\n'
 }
 
 let parseFile = function(filePath) {
-  let filenameArr = filePath.split("/");
+  let filenameArr = filePath.split(separator);
   let filename = filenameArr[filenameArr.length-1].replace(".js","").replace(/[^0-9a-zA-Z]/g,'_');
   if (filename === "index") { return }
+
+  console.log("Checking", filePath, '...')
 
   let requires = require("./" + filePath);
   if (Object.keys(requires).length == 0) { return }
 
-  let tsPath= filePath.replace('dist/','./')
+  let tsPath= filePath.replace('dist' + separator,'./')
   tsPath= tsPath.replace('.js','')
+  // catch for windows..
+  tsPath= tsPath.replace(/(\\)/g,'/')
 
   let importString = 'import {';
   Object.keys(requires).forEach((item) => {
@@ -98,8 +106,7 @@ exportContent.forEach((str) => {
 
 result += requireList;
 result += "\n\n\n";
-result += declarations;
-result += "\n\n\n";
-result += `export default {\n${exportString}}`;
+// result += declarations;
+result += `export {\n${exportString}}`;
 
 fs.writeFileSync('./src/index.ts', result);

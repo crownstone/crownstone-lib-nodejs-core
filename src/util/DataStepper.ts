@@ -24,6 +24,15 @@ export class DataStepper {
     return source.readUInt16LE(0);
   }
 
+  skip(count = 1) {
+    if (this.position + count <= this.length) {
+      this.position += count
+    }
+    else {
+      throw new BluenetError(BluenetErrorType.INVALID_DATA_LENGTH, "Tried to get more bytes from buffer than were available.")
+    }
+  }
+
   getBuffer(size: number) {
     return this._request(size);
   }

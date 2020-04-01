@@ -54,6 +54,11 @@ export function parseOpCode3_type0(serviceData : ServiceData, data : Buffer) {
       serviceData.timestamp = serviceData.partialTimestamp; // this is now a counter
     }
 
+    // bitmask states
+    let globalBitmaskArray = Util.getBitMaskUInt8(data[14])
+    serviceData.behaviourEnabled = globalBitmaskArray[0]
+    // rest of the bitmask is reserved for now
+
     serviceData.validation = data[15]
   }
 }

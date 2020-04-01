@@ -8,7 +8,6 @@ interface keyMap {
   meshAppKey      : string,
 }
 
-
 type PromiseCallback = (any) => Promise<any>
 
 interface ServiceDataJson {

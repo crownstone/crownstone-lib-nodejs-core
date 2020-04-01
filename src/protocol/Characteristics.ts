@@ -4,8 +4,8 @@ export const DeviceCharacteristics = {
 };
 
 export const CrownstoneCharacteristics = {
-  Control      : "24f0000a7d104805bfc17663a01c3bff",
-  Result       : "24f0000b7d104805bfc17663a01c3bff",
+  Control      : "24f0000c7d104805bfc17663a01c3bff",
+  Result       : "24f0000d7d104805bfc17663a01c3bff",
   SessionNonce : "24f000087d104805bfc17663a01c3bff",
   FactoryReset : "24f000097d104805bfc17663a01c3bff",
 };
@@ -15,8 +15,8 @@ export const SetupCharacteristics = {
   SessionKey   : "24f100037d104805bfc17663a01c3bff",
   GoToDFU      : "24f100067d104805bfc17663a01c3bff",
   SessionNonce : "24f100087d104805bfc17663a01c3bff",
-  Control      : "24f1000a7d104805bfc17663a01c3bff",
-  Result       : "24f1000b7d104805bfc17663a01c3bff",
+  Control      : "24f1000c7d104805bfc17663a01c3bff",
+  Result       : "24f1000d7d104805bfc17663a01c3bff",
 };
 
 export const DFUCharacteristics = {

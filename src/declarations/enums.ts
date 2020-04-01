@@ -45,3 +45,14 @@ export const BluenetErrorType = {
   INVALID_DATA_LENGTH:                  "INVALID_DATA_LENGTH",
   BUFFER_TOO_SHORT_FOR_DATA:            "BUFFER_TOO_SHORT_FOR_DATA",
 };
+
+export const GetPesistenceMode = {
+  CURRENT          : 0,
+  STORED           : 1,
+  FIRMWARE_DEFAULT : 2,
+}
+export const SetPesistenceMode = {
+  TEMPORARY : 0,
+  STORED    : 1,
+}
+

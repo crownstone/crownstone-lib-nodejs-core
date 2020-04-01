@@ -38,7 +38,9 @@ export class ServiceData {
   timeIsSet;
   switchCraftEnabled;
   tapToToggleEnabled;
+  behaviourEnabled;
   behaviourOverridden;
+  behaviourMasterHash;
 
   uniqueIdentifier;
 
@@ -148,6 +150,10 @@ export class ServiceData {
       
       errorMode                 : this.errorMode,
       errors                    : errorsDictionary,
+
+      behaviourOverridden       : this.behaviourOverridden,
+      behaviourMasterHash       : this.behaviourMasterHash,
+      behaviourEnabled          : this.behaviourEnabled,
       
       uniqueElement             : this.uniqueIdentifier,
       timeIsSet                 : this.timeIsSet,

@@ -1,4 +1,3 @@
-/// <reference path="../declarations/declarations.d.ts" />
 export const Util = {
 
   boundToUnity: function(value) {

@@ -8,11 +8,13 @@ let isWin = process.platform === "win32";
 let fs = require( 'fs' );
 let path = require( 'path' );
 let startPath = "./dist";
+let sourcePath = "./src";
 
 let requireList = ''
 let exportContent = []
 
 let declarations = ''
+let references = ''
 
 let separator = isWin ? "\\" : "/"
 
@@ -47,6 +49,7 @@ let parsePathDeclarations = function(dirPath) {
     let ext = elementPath.substr(elementPath.length - 4);
 
     if (stat.isFile() && (ext === "d.ts")) {
+      references += "/// <reference path=\"" + elementPath.replace("src",".") + "\" />\n"
       parseFileDeclarations(elementPath);
     }
     else if (stat.isDirectory()) {
@@ -94,7 +97,7 @@ let parseFile = function(filePath) {
 }
 
 parsePath(startPath)
-parsePathDeclarations("./src")
+parsePathDeclarations(sourcePath)
 
 let result = ''
 
@@ -104,6 +107,7 @@ exportContent.forEach((str) => {
   exportString += "  " + str + ",\n";
 })
 
+result += references;
 result += requireList;
 result += "\n\n\n";
 // result += declarations;

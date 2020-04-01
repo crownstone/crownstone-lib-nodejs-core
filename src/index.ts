@@ -1,3 +1,4 @@
+/// <reference path="./declarations/declarations.d.ts" />
 import {BluenetSettings, } from "./containers/BluenetSettings"
 import {UserLevel, LOG_LEVEL, LogConfig, BluenetErrorType, } from "./declarations/enums"
 import {Advertisement, } from "./packets/Advertisement"
@@ -20,11 +21,11 @@ import {CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_BUILTIN_ADVERTISE
 import {DataStepper, DataWriter, } from "./util/DataStepper"
 import {EncryptionHandler, SessionData, EncryptedPackage, } from "./util/EncryptionHandler"
 import {EventBusClass, } from "./util/EventBus"
-import {Logger, LOGv, LOGd, LOGi, LOG, LOGw, LOGe, } from "./util/logging/Log"
 import {NotificationMerger, } from "./util/NotificationMerger"
 import {PublicUtil, } from "./util/PublicUtil"
 import {reconstructTimestamp, } from "./util/Timestamp"
 import {Util, } from "./util/Util"
+import {Logger, LOGv, LOGd, LOGi, LOG, LOGw, LOGe, } from "./util/logging/Log"
 
 
 

@@ -4,6 +4,7 @@ import {parseOpCode3_type1} from "./AdvertisementTypes/OpCode3/opCode3_type1";
 import {parseOpCode3_type2} from "./AdvertisementTypes/OpCode3/opCode3_type2";
 import {parseOpCode3_type3} from "./AdvertisementTypes/OpCode3/opCode3_type3";
 import {parseOpCode4_type0} from "./AdvertisementTypes/OpCode4/opCode4_type0";
+import {parseOpCode7_type4} from "./AdvertisementTypes/OpCode7/opCode7_type4";
 
 
 
@@ -66,6 +67,9 @@ export function parseOpCode5( serviceData : ServiceData, data : Buffer ) {
       break;
     case 3:
       parseOpCode3_type3(serviceData, data);
+      break;
+    case 4:
+      parseOpCode7_type4(serviceData, data);
       break;
     default:
       parseOpCode3_type0(serviceData, data)

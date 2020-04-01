@@ -85,14 +85,15 @@ export class ControlPacketsGenerator {
   }
 
   static getRegisterTrackedDevicesPacket(
-  trackingNumber:number,
-  locationUID:number,
-  profileId:number,
-  rssiOffset:number,
-  ignoreForPresence:boolean,
-  tapToToggleEnabled:boolean,
-  deviceToken:number,
-  ttlMinutes:number) {
+    trackingNumber:number,
+    locationUID:number,
+    profileId:number,
+    rssiOffset:number,
+    ignoreForPresence:boolean,
+    tapToToggleEnabled:boolean,
+    deviceToken:number,
+    ttlMinutes:number
+  ) {
     let data = new DataWriter(11);
     data.putUInt16(trackingNumber);
     data.putUInt8(locationUID);

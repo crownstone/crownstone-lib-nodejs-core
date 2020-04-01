@@ -1,4 +1,5 @@
 import {ControlType} from "./BluenetTypes";
+import {GetPesistenceMode, SetPesistenceMode} from "../declarations/enums";
 
 
 export class BasePacket {
@@ -88,18 +89,62 @@ export class ControlPacket extends BasePacket {}
 export class FactoryResetPacket extends ControlPacket {
   constructor() {
     super(ControlType.FACTORY_RESET);
-    this.loadUInt32(0xdeadbeef)
+    this.loadUInt32(0xdeadbeef);
   }
 }
 
 
 export class ControlStateGetPacket extends BasePacket {
-
+  stateType: number;
   id : number = 0;
+  persistenceMode : number = GetPesistenceMode.CURRENT;
 
-  constructor(type, id) {
-    super(type);
+  constructor(stateType, id, persistenceMode) {
+    super(ControlType.GET_STATE);
+
+    this.stateType = stateType;
     this.id = id;
+    this.persistenceMode = persistenceMode;
+  }
+
+  getPacket() : Buffer {
+    let packetLength = 4;
+    let buffer = Buffer.alloc(packetLength);
+
+    buffer.writeUInt16LE(this.type, 0); // the type here is the getState command type.
+    buffer.writeUInt16LE(this.length + 2 + 2 + 2, 2); // length + 2 for the ID size, +2 for the persistence, + 2 for the state type
+
+    // create a buffer for the id value.
+    let stateTypeBuffer = Buffer.alloc(2);
+    stateTypeBuffer.writeUInt16LE(this.stateType,0);
+
+    // create a buffer for the id value.
+    let idBuffer = Buffer.alloc(2);
+    idBuffer.writeUInt16LE(this.id,0);
+
+    let persistenceBuffer = Buffer.alloc(2);
+    persistenceBuffer.writeUInt8(this.persistenceMode,0);
+    persistenceBuffer.writeUInt8(0,1);
+
+    buffer = Buffer.concat([buffer, stateTypeBuffer, idBuffer, persistenceBuffer]);
+
+    return buffer;
+  }
+}
+
+
+
+export class ControlStateSetPacket extends BasePacket {
+  stateType: number;
+  id : number = 0;
+  persistenceMode : number = SetPesistenceMode.STORED;
+
+  constructor(stateType, id, persistenceMode) {
+    super(ControlType.SET_STATE);
+
+    this.stateType = stateType;
+    this.id = id;
+    this.persistenceMode = persistenceMode;
   }
 
   getPacket() : Buffer {
@@ -107,18 +152,23 @@ export class ControlStateGetPacket extends BasePacket {
     let buffer = Buffer.alloc(packetLength);
 
     buffer.writeUInt16LE(this.type, 0);
-    buffer.writeUInt16LE(this.length + 2, 2); // length + 2 for the ID size
+    buffer.writeUInt16LE(this.length + 2 + 2 + 2, 2); // length + 2 for the ID size, +2 for the persistence. +2 for the state type
 
-    if (this.length > 0 && this.payloadBuffer) {
-      buffer = Buffer.concat([buffer, this.payloadBuffer])
-    }
+    // create a buffer for the id value.
+    let stateTypeBuffer = Buffer.alloc(2);
+    stateTypeBuffer.writeUInt16LE(this.stateType,0);
+
     // create a buffer for the id value.
     let idBuffer = Buffer.alloc(2);
     idBuffer.writeUInt16LE(this.id,0);
 
-    buffer = Buffer.concat([buffer, idBuffer]);
+    let persistenceBuffer = Buffer.alloc(2);
+    persistenceBuffer.writeUInt8(this.persistenceMode,0);
+    persistenceBuffer.writeUInt8(0,1);
+
+    buffer = Buffer.concat([buffer, idBuffer, persistenceBuffer, this.payloadBuffer]);
 
     return buffer;
   }
-
 }
+

@@ -81,6 +81,7 @@ export function parseOpCode6( serviceData : ServiceData, data : Buffer ) {
   if (data.length !== 16) { return; }
 
   serviceData.dataType = data.readUInt8(0);
+  serviceData.setupMode = true;
 
   switch(serviceData.dataType) {
     case 0:

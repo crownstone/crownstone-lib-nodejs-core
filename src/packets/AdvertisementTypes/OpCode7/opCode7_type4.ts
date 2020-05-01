@@ -11,16 +11,15 @@ export function parseOpCode7_type4(serviceData : ServiceData, data : Buffer) {
     serviceData.stateOfExternalCrownstone = false
 
     payload.skip() // first byte is the datatype.
-    serviceData.crownstoneId         = payload.getUInt8()
-    serviceData.switchState          = payload.getUInt8()
-    serviceData.flagsBitmask         = payload.getUInt8()
-    serviceData.behaviourMasterHash  = payload.getUInt16()
-    payload.skip(6)
-    serviceData.partialTimestamp     = payload.getUInt16()
-    payload.skip()
-    serviceData.validation           = payload.getUInt8()
+    serviceData.crownstoneId         = payload.getUInt8();
+    serviceData.switchState          = payload.getUInt8();
+    serviceData.flagsBitmask         = payload.getUInt8();
+    serviceData.behaviourMasterHash  = payload.getUInt16();
+    payload.skip(6);
+    serviceData.partialTimestamp     = payload.getUInt16();
+    payload.skip();
+    serviceData.validation           = payload.getUInt8();
 
-    // dataType = data[0]
     serviceData.stateOfExternalCrownstone = false;
 
     // bitmask states

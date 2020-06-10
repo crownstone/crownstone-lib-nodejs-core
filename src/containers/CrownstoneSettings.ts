@@ -1,6 +1,6 @@
 
 
-export class BluenetSettings {
+export class CrownstoneSettings {
   encryptionEnabled = true;
 
   adminKey          : Buffer = null;

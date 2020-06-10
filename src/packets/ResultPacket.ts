@@ -3,7 +3,7 @@
  *
  */
 import {DataStepper} from "../util/DataStepper";
-import {ControlType, ResultValue} from "../protocol/BluenetTypes";
+import {ControlType, ResultValue} from "../protocol/CrownstoneTypes";
 
 export class ResultPacket {
   commandType;

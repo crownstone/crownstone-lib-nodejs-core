@@ -1,5 +1,5 @@
-import {BluenetError} from "../protocol/BluenetError";
-import {BluenetErrorType} from "../declarations/enums";
+import {CrownstoneError} from "../protocol/CrownstoneError";
+import {CrownstoneErrorType} from "../declarations/enums";
 
 
 export class DataStepper {
@@ -29,7 +29,7 @@ export class DataStepper {
       this.position += count
     }
     else {
-      throw new BluenetError(BluenetErrorType.INVALID_DATA_LENGTH, "Tried to get more bytes from buffer than were available.")
+      throw new CrownstoneError(CrownstoneErrorType.INVALID_DATA_LENGTH, "Tried to get more bytes from buffer than were available.")
     }
   }
 
@@ -44,7 +44,7 @@ export class DataStepper {
       return this.buffer.slice(start, this.position);
     }
     else {
-      throw new BluenetError(BluenetErrorType.INVALID_DATA_LENGTH, "Tried to get more bytes from buffer than were available.")
+      throw new CrownstoneError(CrownstoneErrorType.INVALID_DATA_LENGTH, "Tried to get more bytes from buffer than were available.")
     }
   }
 
@@ -96,7 +96,7 @@ export class DataWriter {
       this.buffer[method](data, this.position);
     }
     else {
-      throw new BluenetError(BluenetErrorType.BUFFER_TOO_SHORT_FOR_DATA, "You tried to push more data into the buffer than you have allocated space for.")
+      throw new CrownstoneError(CrownstoneErrorType.BUFFER_TOO_SHORT_FOR_DATA, "You tried to push more data into the buffer than you have allocated space for.")
     }
   }
 

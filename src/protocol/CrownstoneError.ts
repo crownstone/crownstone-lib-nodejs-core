@@ -1,6 +1,6 @@
 
 
-export class BluenetError {
+export class CrownstoneError {
   type: string;
   message: string;
   code: number;

@@ -1,6 +1,6 @@
 /// <reference path="./declarations/declarations.d.ts" />
-import {BluenetSettings, } from "./containers/BluenetSettings"
-import {UserLevel, LOG_LEVEL, LogConfig, BluenetErrorType, } from "./declarations/enums"
+import {CrownstoneSettings, } from "./containers/CrownstoneSettings"
+import {UserLevel, LOG_LEVEL, LogConfig, CrownstoneErrorType, } from "./declarations/enums"
 import {Advertisement, } from "./packets/Advertisement"
 import {parseOpCode3_type0, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type0"
 import {parseOpCode3_type1, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type1"
@@ -12,8 +12,8 @@ import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6, } from "./packet
 import {ResultPacket, } from "./packets/ResultPacket"
 import {ServiceData, } from "./packets/ServiceData"
 import {BasePacket, ControlPacket, FactoryResetPacket, ControlStateGetPacket, } from "./protocol/BasePackets"
-import {BluenetError, } from "./protocol/BluenetError"
-import {ControlType, StateType, DeviceType, ResultValue, ProcessType, BroadcastTypes, } from "./protocol/BluenetTypes"
+import {CrownstoneError, } from "./protocol/CrownstoneError"
+import {ControlType, StateType, DeviceType, ResultValue, ProcessType, BroadcastTypes, } from "./protocol/CrownstoneTypes"
 import {DeviceCharacteristics, CrownstoneCharacteristics, SetupCharacteristics, DFUCharacteristics, } from "./protocol/Characteristics"
 import {ControlPacketsGenerator, } from "./protocol/ControlPackets"
 import {StoneMultiSwitchPacket, MeshMultiSwitchPacket, } from "./protocol/MeshPackets"
@@ -32,9 +32,9 @@ import {Logger, LOGv, LOGd, LOGi, LOG, LOGw, LOGe, } from "./util/logging/Log"
 export {
   Advertisement,
   BasePacket,
-  BluenetError,
-  BluenetErrorType,
-  BluenetSettings,
+  CrownstoneError,
+  CrownstoneErrorType,
+  CrownstoneSettings,
   BroadcastTypes,
   CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID,
   CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID,

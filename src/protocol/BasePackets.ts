@@ -1,4 +1,4 @@
-import {ControlType} from "./BluenetTypes";
+import {ControlType} from "./CrownstoneTypes";
 import {GetPesistenceMode, SetPesistenceMode} from "../declarations/enums";
 
 

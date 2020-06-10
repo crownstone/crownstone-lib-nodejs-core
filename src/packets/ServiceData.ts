@@ -1,7 +1,7 @@
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6} from "./Parsers";
 import {CrownstoneErrors} from "./CrownstoneErrors";
 import {EncryptionHandler} from "../util/EncryptionHandler";
-import {DeviceType} from "../protocol/BluenetTypes";
+import {DeviceType} from "../protocol/CrownstoneTypes";
 let aesjs = require('aes-js');
 
 export class ServiceData {
@@ -57,35 +57,41 @@ export class ServiceData {
     if (data.length === 18) {
       this.encryptedData = data.slice(2);
       this.encryptedDataStartIndex = 2
+      this.opCode = this.data.readUInt8(0);
     }
     else if (data.length === 17) {
       this.encryptedData = data.slice(1);
       this.encryptedDataStartIndex = 1;
+      this.opCode = this.data[0];
     }
     else if (data.length === 16 && unencrypted) {
       this.encryptedData = data;
       this.encryptedDataStartIndex = 0;
+      this.opCode = 7;
     }
     else {
       this.validData = false;
+    }
+    this.getOperationMode();
+  }
+
+  getOperationMode() {
+    if (this.validData) {
+      switch (this.opCode) {
+        case 4:
+          this.setupMode = true;
+          break;
+        case 6:
+          this.setupMode = true;
+          this.getDeviceTypeFromPublicData();
+          break;
+        default:
+          this.setupMode = false;
+      }
     }
   }
 
-  parse(unencrypted = false) {
-    this.validData = true;
-    if (this.data.length === 18) {
-      this.opCode = this.data.readUInt8(0);
-    }
-    else if (this.data.length === 17) {
-      this.opCode = this.data[0];
-    }
-    else if (this.data.length === 16 && unencrypted === true) {
-      this.opCode = 7
-    }
-    else {
-      this.validData = false;
-    }
-
+  parse() {
     if (this.validData) {
       switch (this.opCode) {
         case 3:

@@ -1,4 +1,4 @@
-import {ControlType} from './BluenetTypes';
+import {ControlType} from './CrownstoneTypes';
 import {ControlPacket, FactoryResetPacket} from "./BasePackets";
 import {Util} from "../util/Util";
 import { DataWriter } from '../util/DataStepper';

@@ -1,6 +1,6 @@
-import {BluenetError} from "../protocol/BluenetError";
-import {BluenetErrorType, UserLevel} from "../declarations/enums";
-import {BluenetSettings} from "../containers/BluenetSettings";
+import {CrownstoneError} from "../protocol/CrownstoneError";
+import {CrownstoneErrorType, UserLevel} from "../declarations/enums";
+import {CrownstoneSettings} from "../containers/CrownstoneSettings";
 
 const crypto = require('crypto');
 const aesjs = require('aes-js');
@@ -39,8 +39,8 @@ class AESCounter {
 export class EncryptionHandler {
 
   static decryptSessionNonce(rawNonce: Buffer, key: Buffer) {
-    if (key.length      !== 16) { throw new BluenetError(BluenetErrorType.INPUT_ERROR, "Invalid Key"); }
-    if (rawNonce.length !== 16) { throw new BluenetError(BluenetErrorType.INPUT_ERROR, "Invalid Payload for sessionNonce decrypting!"); }
+    if (key.length      !== 16) { throw new CrownstoneError(CrownstoneErrorType.INPUT_ERROR, "Invalid Key"); }
+    if (rawNonce.length !== 16) { throw new CrownstoneError(CrownstoneErrorType.INPUT_ERROR, "Invalid Payload for sessionNonce decrypting!"); }
 
     const aesEcb = new aesjs.ModeOfOperation.ecb(key);
     const decrypted = Buffer.from(aesEcb.decrypt(rawNonce));
@@ -50,13 +50,13 @@ export class EncryptionHandler {
       return decrypted.slice(4,4+SESSION_DATA_LENGTH);
     }
     else {
-      throw new BluenetError(BluenetErrorType.COULD_NOT_VALIDATE_SESSION_NONCE, "Could not validate Session Nonce", 301);
+      throw new CrownstoneError(CrownstoneErrorType.COULD_NOT_VALIDATE_SESSION_NONCE, "Could not validate Session Nonce", 301);
     }
   }
 
 
 
-  // static encrypt( data : Buffer, settings : BluenetSettings ) {
+  // static encrypt( data : Buffer, settings : CrownstoneSettings ) {
   //   if (settings.sessionNonce == null) {
   //     throw "BleError.NO_SESSION_NONCE_SET";
   //   }
@@ -102,7 +102,7 @@ export class EncryptionHandler {
   //   return result;
   // }
 
-  // static decrypt( data: Buffer, settings: BluenetSettings ) {
+  // static decrypt( data: Buffer, settings: CrownstoneSettings ) {
   //   if (settings.sessionNonce == null) {
   //     throw "BleError.NO_SESSION_NONCE_SET"
   //   }
@@ -118,7 +118,7 @@ export class EncryptionHandler {
   //   return result;
   // }
 
-  static _decrypt(data : Buffer, sessionData: SessionData, settings: BluenetSettings) {
+  static _decrypt(data : Buffer, sessionData: SessionData, settings: CrownstoneSettings) {
     let encryptedPackage = new EncryptedPackage(data);
 
     let key = EncryptionHandler._getKey(encryptedPackage.userLevel, settings);
@@ -174,7 +174,7 @@ export class EncryptionHandler {
     return IV
   }
 
-  static _getKey(userLevel, settings: BluenetSettings) : Buffer {
+  static _getKey(userLevel, settings: CrownstoneSettings) : Buffer {
     if (settings.initializedKeys == false && userLevel != UserLevel.setup) {
       throw "BleError.COULD_NOT_ENCRYPT_KEYS_NOT_SET"
     }

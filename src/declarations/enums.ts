@@ -35,7 +35,7 @@ export let LogConfig = {
   log     : LOG_LEVEL.info,  // basic default log for general logging
 };
 
-export const BluenetErrorType = {
+export const CrownstoneErrorType = {
   INPUT_ERROR:                          "INPUT_ERROR",
   COULD_NOT_VALIDATE_SESSION_NONCE:     "COULD_NOT_VALIDATE_SESSION_NONCE",
   INCOMPATIBLE_FIRMWARE:                "INCOMPATIBLE_FIRMWARE",

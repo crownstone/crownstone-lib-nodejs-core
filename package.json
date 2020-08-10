@@ -4,7 +4,7 @@
   "scripts": {
     "start": "tsc -watch",
     "test": "jest --useStderr --clearMocks",
-    "buid": "tsc",
+    "build": "tsc",
     "cleanTest": "jest --useStderr --no-cache --clearMocks"
   },
   "main": "dist/index.js",

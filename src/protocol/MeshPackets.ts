@@ -4,11 +4,16 @@ export class StoneMultiSwitchPacket {
 
   /**
    * crownstoneId:
-   * state:  number [0..1]
+   * state:  number [0..255]
    **/
   constructor(crownstoneId : number, state : number) {
     this.crownstoneId = crownstoneId;
-    this.state = Math.min(1, Math.max(0, state)) * 100; // map to [0 .. 100]
+    if (state <= 1) {
+      this.state = Math.min(1, Math.max(0, state)) * 100; // map to [0 .. 100]
+    }
+    else {
+      this.state = state;
+    }
   }
 
   getPacket() {

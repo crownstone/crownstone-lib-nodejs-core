@@ -30,6 +30,9 @@ export const ControlType = {
   UNSPECIFIED                : 65535
 };
 
+export let ControlTypeInv = {}
+Object.keys(ControlType).forEach((value) => { ControlTypeInv[ControlType[value]] = value; })
+
 
 export const StateType = {
   PWM_PERIOD               : 5,
@@ -134,6 +137,8 @@ export const ResultValue = {
   ADC_INVALID_CHANNEL   : 96,     // Invalid adc input channel selected.
 };
 
+export let ResultValueInv = {}
+Object.keys(ResultValue).forEach((value) => { ResultValueInv[ResultValue[value]] = value; })
 
 export const ProcessType = {
   CONTINUE              : 0,

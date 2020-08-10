@@ -3,12 +3,13 @@
  *
  */
 import {DataStepper} from "../util/DataStepper";
-import {ControlType, ResultValue} from "../protocol/CrownstoneTypes";
+import {ControlTypeInv, ResultValueInv} from "../protocol/CrownstoneTypes";
 
 export class ResultPacket {
   commandType;
   type;
   opCode;
+  protocol;
   resultCode;
   size : number;
   payload : Buffer;
@@ -20,17 +21,18 @@ export class ResultPacket {
   }
 
   load(data : Buffer) {
-    let minSize = 6;
+    let minSize = 7;
 
     if (data.length >= minSize) {
       this.valid = true;
 
       let stepper = new DataStepper(data);
 
+      this.protocol = stepper.getUInt8();
       this.commandType = stepper.getUInt16();
       this.resultCode  = stepper.getUInt16();
 
-      if (ControlType[this.commandType] === undefined || ResultValue[this.resultCode] === undefined) {
+      if (ControlTypeInv[this.commandType] === undefined || ResultValueInv[this.resultCode] === undefined) {
         this.valid = false;
         return;
       }

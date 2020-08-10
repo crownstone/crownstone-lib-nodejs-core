@@ -1,6 +1,7 @@
 import {ControlType} from "./CrownstoneTypes";
 import {GetPesistenceMode, SetPesistenceMode} from "../declarations/enums";
 
+const SUPPORTED_PROTOCOL_VERSION = 5
 
 export class BasePacket {
   type = 0;
@@ -67,11 +68,12 @@ export class BasePacket {
   }
 
   getPacket() : Buffer {
-    let packetLength = 4;
+    let packetLength = 5;
     let buffer = Buffer.alloc(packetLength);
 
-    buffer.writeUInt16LE(this.type, 0);
-    buffer.writeUInt16LE(this.length, 2); // length
+    buffer.writeUInt8(SUPPORTED_PROTOCOL_VERSION, 0)
+    buffer.writeUInt16LE(this.type, 1);
+    buffer.writeUInt16LE(this.length, 3); // length
 
     if (this.length > 0 && this.payloadBuffer) {
       buffer = Buffer.concat([buffer, this.payloadBuffer])
@@ -108,11 +110,12 @@ export class ControlStateGetPacket extends BasePacket {
   }
 
   getPacket() : Buffer {
-    let packetLength = 4;
+    let packetLength = 5;
     let buffer = Buffer.alloc(packetLength);
 
-    buffer.writeUInt16LE(this.type, 0); // the type here is the getState command type.
-    buffer.writeUInt16LE(this.length + 2 + 2 + 2, 2); // length + 2 for the ID size, +2 for the persistence, + 2 for the state type
+    buffer.writeUInt8(SUPPORTED_PROTOCOL_VERSION, 0)
+    buffer.writeUInt16LE(this.type, 1); // the type here is the getState command type.
+    buffer.writeUInt16LE(this.length + 6, 3); // length + 2 for the ID size, +2 for the persistence, + 2 for the state type
 
     // create a buffer for the id value.
     let stateTypeBuffer = Buffer.alloc(2);
@@ -148,11 +151,12 @@ export class ControlStateSetPacket extends BasePacket {
   }
 
   getPacket() : Buffer {
-    let packetLength = 4;
+    let packetLength = 5;
     let buffer = Buffer.alloc(packetLength);
 
-    buffer.writeUInt16LE(this.type, 0);
-    buffer.writeUInt16LE(this.length + 2 + 2 + 2, 2); // length + 2 for the ID size, +2 for the persistence. +2 for the state type
+    buffer.writeUInt8(SUPPORTED_PROTOCOL_VERSION, 0)
+    buffer.writeUInt16LE(this.type, 1);
+    buffer.writeUInt16LE(this.length + 6, 3); // length + 2 for the ID size, +2 for the persistence. +2 for the state type
 
     // create a buffer for the id value.
     let stateTypeBuffer = Buffer.alloc(2);

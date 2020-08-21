@@ -430,6 +430,12 @@ export const Util = {
 
 
 
+  wait: function(waitTimeMs : number) : Promise<void> {
+    return new Promise(function(resolve, reject) {
+      setTimeout(function() { resolve() }, waitTimeMs)
+    })
+  },
+
 
 };
 

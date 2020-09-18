@@ -24,6 +24,11 @@ export class DataStepper {
     return source.readUInt16LE(0);
   }
 
+  getUInt32() {
+    let source = this._request(4);
+    return source.readUInt32LE(0);
+  }
+
   skip(count = 1) {
     if (this.position + count <= this.length) {
       this.position += count
@@ -34,6 +39,11 @@ export class DataStepper {
   }
 
   getBuffer(size: number) {
+    return this._request(size);
+  }
+
+  getRemainingBuffer() {
+    let size = this.length - this.position;
     return this._request(size);
   }
 

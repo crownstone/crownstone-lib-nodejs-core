@@ -37,7 +37,7 @@ export function parseOpCode7_type4(serviceData : ServiceData, data : Buffer) {
     serviceData.uniqueIdentifier   = serviceData.partialTimestamp;
 
     if (serviceData.timeIsSet) {
-      serviceData.timestamp = reconstructTimestamp(new Date().valueOf() * 1000, serviceData.partialTimestamp);
+      serviceData.timestamp = reconstructTimestamp(new Date().valueOf() * 0.001, serviceData.partialTimestamp);
     }
     else {
       serviceData.timestamp = serviceData.partialTimestamp; // this is now a counter

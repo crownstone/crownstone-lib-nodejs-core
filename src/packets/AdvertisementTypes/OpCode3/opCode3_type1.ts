@@ -30,7 +30,7 @@ export function parseOpCode3_type1(serviceData : ServiceData, data : Buffer) {
 
 
     if (serviceData.timeIsSet) {
-      serviceData.timestamp = reconstructTimestamp(new Date().valueOf() * 1000, serviceData.partialTimestamp)
+      serviceData.timestamp = reconstructTimestamp(new Date().valueOf() * 0.001, serviceData.partialTimestamp)
     }
     else {
       serviceData.timestamp = serviceData.partialTimestamp; // this is now a counter

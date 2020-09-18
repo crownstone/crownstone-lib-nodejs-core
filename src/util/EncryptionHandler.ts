@@ -118,6 +118,7 @@ export class EncryptionHandler {
   //   return result;
   // }
 
+
   static _decrypt(data : Buffer, sessionData: SessionData, settings: CrownstoneSettings) {
     let encryptedPackage = new EncryptedPackage(data);
 
@@ -135,7 +136,26 @@ export class EncryptionHandler {
     return Buffer.from(decryptedBytes);
   }
 
-  static _verifyDecryption(decrypted : Buffer, sessionData: SessionData) {
+
+  static decryptCTR(data : Buffer, sessionData: SessionData, key: Buffer ) {
+    let encryptedPackage = new EncryptedPackage(data);
+
+    let IV = EncryptionHandler.generateIV(encryptedPackage.nonce, sessionData.sessionNonce);
+
+    let counterBuffer = Buffer.alloc(BLOCK_LENGTH);
+    IV.copy(counterBuffer,0,0);
+
+    // do the actual encryption
+    let aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(counterBuffer));
+    let decryptedBytes = aesCtr.decrypt(encryptedPackage.getPayload());
+
+    return Buffer.from(decryptedBytes);
+  }
+
+
+
+
+  static verifyAndExtractDecryption(decrypted : Buffer, sessionData: SessionData) {
     if (decrypted.readUInt32LE(0) === sessionData.validationKey.readUInt32LE(0)) {
       // remove checksum from decyption and return payload
       let result = Buffer.alloc(decrypted.length - SESSION_KEY_LENGTH);
@@ -174,6 +194,7 @@ export class EncryptionHandler {
     return IV
   }
 
+
   static _getKey(userLevel, settings: CrownstoneSettings) : Buffer {
     if (settings.initializedKeys == false && userLevel != UserLevel.setup) {
       throw "BleError.COULD_NOT_ENCRYPT_KEYS_NOT_SET"
@@ -208,6 +229,7 @@ export class EncryptionHandler {
     return key
   }
 
+
   static fillWithRandomNumbers(buff) {
     if (global["BLUENET_ENCRYPTION_TESTING"]) {
       for (let i = 0; i < buff.length; i++) {
@@ -236,12 +258,16 @@ export class SessionData {
 }
 
 
-export class EncryptedPackage {
+export class EncryptedPackageBase {
   nonce     : Buffer = null;
-  userLevel : number = null;
+  keyId     : number = null;
   payload   : Buffer = null;
 
   constructor(data : Buffer) {
+     this.parseData(data)
+  }
+
+  parseData(data: Buffer)  {
     let prefixLength = PACKET_NONCE_LENGTH + PACKET_USER_LEVEL_LENGTH;
     if (data.length < prefixLength) {
       throw 'BleError.INVALID_PACKAGE_FOR_ENCRYPTION_TOO_SHORT'
@@ -254,11 +280,7 @@ export class EncryptedPackage {
       throw 'BleError.INVALID_PACKAGE_FOR_ENCRYPTION_TOO_SHORT'
     }
 
-    this.userLevel = data.readUInt8(PACKET_NONCE_LENGTH);
-    // only allow 0, 1, 2 for Admin, User, Guest and 100 for Setup
-    if (this.userLevel > 2 && this.userLevel != UserLevel.setup) {
-      throw 'BleError.INVALID_KEY_FOR_ENCRYPTION'
-    }
+    this.keyId = data.readUInt8(PACKET_NONCE_LENGTH);
 
     let payloadData = Buffer.alloc(data.length - prefixLength);
     data.copy(payloadData, 0, prefixLength, data.length);
@@ -270,6 +292,7 @@ export class EncryptedPackage {
     this.payload = payloadData;
   }
 
+
   getPayload() : Buffer {
     if (this.payload != null) {
       return this.payload;
@@ -278,3 +301,20 @@ export class EncryptedPackage {
   }
 }
 
+
+export class EncryptedPackage extends EncryptedPackageBase {
+  userLevel : number = null;
+
+  constructor(data : Buffer) {
+    super(data);
+    this.userLevel = this.keyId;
+    this.validatePayload()
+  }
+
+  validatePayload() {
+    // only allow 0, 1, 2 for Admin, User, Guest and 100 for Setup
+    if (this.userLevel > 2 && this.userLevel != UserLevel.setup) {
+      throw 'BleError.INVALID_KEY_FOR_ENCRYPTION'
+    }
+  }
+}

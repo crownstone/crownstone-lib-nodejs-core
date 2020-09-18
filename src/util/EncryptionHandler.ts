@@ -11,6 +11,7 @@ let BLOCK_LENGTH             = 16;
 let NONCE_LENGTH             = 16;
 let SESSION_DATA_LENGTH      = 5;
 let SESSION_KEY_LENGTH       = 4;
+let MESSAGE_SIZE_LENGTH      = 4;
 let PACKET_USER_LEVEL_LENGTH = 1;
 let PACKET_NONCE_LENGTH      = 3;
 let CHECKSUM                 = 0xcafebabe;
@@ -152,7 +153,45 @@ export class EncryptionHandler {
     return Buffer.from(decryptedBytes);
   }
 
+  static encryptCTR(data : Buffer, sessionData: SessionData, key: Buffer, keyIndex: number) {
+    // create Nonce array
+    let nonce = Buffer.alloc(PACKET_NONCE_LENGTH);
+    EncryptionHandler.fillWithRandomNumbers(nonce);
 
+    let IV = EncryptionHandler.generateIV(nonce, sessionData.sessionNonce);
+    let counterBuffer = Buffer.alloc(BLOCK_LENGTH);
+    IV.copy(counterBuffer,0,0);
+
+    // get the packet size. This must fit the data and the session key and be an integer amount of blocks
+    let overheadSize = SESSION_KEY_LENGTH + MESSAGE_SIZE_LENGTH;
+    let packetSize = (data.length + overheadSize) + BLOCK_LENGTH - (data.length + overheadSize) % BLOCK_LENGTH;
+
+    // create the padded payload
+    let paddedPayload = Buffer.alloc(packetSize, 0);
+
+    // copy the validation key into the buffer.
+    sessionData.validationKey.copy(paddedPayload,0,0,overheadSize);
+
+    // write the length into the buffer.
+    paddedPayload.writeUInt16LE(data.length, SESSION_KEY_LENGTH);
+
+    // put the input data in the padded payload
+    data.copy(paddedPayload,overheadSize, 0);
+
+    // do the actual encryption
+    let aesCtr = new aesjs.ModeOfOperation.ctr(key, new aesjs.Counter(counterBuffer));
+    let encryptedBytes = aesCtr.encrypt(paddedPayload);
+    let encryptedBuffer = Buffer.from(encryptedBytes);
+
+    // assemble the result package
+    let result = Buffer.alloc(encryptedBytes.length + PACKET_NONCE_LENGTH + PACKET_USER_LEVEL_LENGTH);
+
+    nonce.copy(result, 0,0, PACKET_NONCE_LENGTH);
+    result.writeUInt8(keyIndex, PACKET_NONCE_LENGTH);
+    encryptedBuffer.copy(result, PACKET_NONCE_LENGTH + PACKET_USER_LEVEL_LENGTH,0);
+
+    return result;
+  }
 
 
   static verifyAndExtractDecryption(decrypted : Buffer, sessionData: SessionData) {
@@ -191,7 +230,7 @@ export class EncryptionHandler {
     // the IV used in the CTR mode is 8 bytes, the last 5 are from the session data
     sessionData.copy(IV,PACKET_NONCE_LENGTH,0);
 
-    return IV
+    return IV;
   }
 
 
@@ -246,14 +285,29 @@ export class SessionData {
   sessionNonce  = null;
   validationKey = null;
 
-  constructor(sessionData) {
-    if (sessionData.length != SESSION_DATA_LENGTH) {
+  constructor(sessionData : number[] | Buffer = null) {
+    if (sessionData !== null) {
+      this.load(sessionData)
+    }
+  }
+
+  load(data : number[] | Buffer) {
+    if (data.length != SESSION_DATA_LENGTH) {
       throw "BleError.INVALID_SESSION_DATA"
     }
-
-    this.sessionNonce = Buffer.from(sessionData);
+    if (data instanceof Buffer) {
+      this.sessionNonce = data;
+    }
+    else {
+      this.sessionNonce = Buffer.from(data);
+    }
     this.validationKey = this.sessionNonce.slice(0,4);
+  }
 
+  generate() {
+    let data = Buffer.alloc(5);
+    EncryptionHandler.fillWithRandomNumbers(data);
+    this.load(data);
   }
 }
 

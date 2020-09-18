@@ -458,6 +458,23 @@ export const Util = {
     })
   },
 
+  prepareKey(key: string | Buffer) {
+    if (!key) { return Buffer.alloc(16) }
+
+    if (key instanceof Buffer) {
+      return key;
+    }
+
+    if (key.length === 16) {
+      return Buffer.from(key, 'ascii');
+    }
+    else if (key.length === 32) {
+      return Buffer.from(key, 'hex')
+    }
+    else {
+      throw "Invalid Key: " + key;
+    }
+  }
 
 };
 

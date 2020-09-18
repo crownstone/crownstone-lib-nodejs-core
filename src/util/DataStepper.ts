@@ -77,6 +77,12 @@ export class DataWriter {
     return this.buffer;
   }
 
+  putBuffer(buffer: Buffer) {
+    this.position  += buffer.length;
+    this.totalSize += buffer.length;
+    this.buffer = Buffer.concat([this.buffer, buffer]);
+  }
+
   putUInt32(data: number) {
     this._place(data, 4, "writeUInt32LE")
   }

@@ -1,4 +1,4 @@
-
+import {Util} from "../util/Util"
 
 export class CrownstoneSettings {
   encryptionEnabled = true;
@@ -29,17 +29,7 @@ export class CrownstoneSettings {
   }
 
   _prepKey(key) {
-    if (!key) { return Buffer.alloc(16) }
-
-    if (key.length === 16) {
-      return Buffer.from(key, 'ascii');
-    }
-    else if (key.length === 32) {
-      return Buffer.from(key, 'hex')
-    }
-    else {
-      throw "Invalid Key: " + key;
-    }
+    return Util.prepareKey(key);
   }
 
   // determineUserLevel() {

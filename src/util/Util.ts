@@ -177,6 +177,28 @@ export const Util = {
     }
   },
 
+  crownstoneTimeToTimestamp: function(csTimestamp) : number {
+    let now = Date.now();
+    if ((now / csTimestamp) < 10) {
+      csTimestamp = csTimestamp / 1000;
+    }
+    let jsTimestamp = 1000*csTimestamp;
+    let timezoneOffsetMinutes = new Date(jsTimestamp).getTimezoneOffset();
+
+    return jsTimestamp + timezoneOffsetMinutes*60000;
+  },
+
+  timestampToCrownstoneTime: function(utcTimestamp) : number {
+    // for holland in summer, timezoneOffsetMinutes is -120, winter will be -60
+    let timezoneOffsetMinutes = new Date(utcTimestamp).getTimezoneOffset();
+
+    return (utcTimestamp - timezoneOffsetMinutes*60000)/1000;
+  },
+
+  nowToCrownstoneTime: function() : number {
+    return Util.timestampToCrownstoneTime(Date.now())
+  },
+
   versions: {
     isHigher: function(version, compareWithVersion) {
       if (!version || !compareWithVersion) {

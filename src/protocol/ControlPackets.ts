@@ -111,6 +111,10 @@ export class ControlPacketsGenerator {
     return new ControlPacket(ControlType.REGISTER_TRACKED_DEVICE).loadBuffer(data.getBuffer()).getPacket()
   }
 
+  static getUartMessagePacket(message: string) : Buffer {
+    return new ControlPacket(ControlType.UART_MESSAGE).loadString(message).getPacket()
+  }
+
 
   static getSetupPacket(type, crownstoneId, adminKey : Buffer, memberKey : Buffer, guestKey : Buffer, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
     let prefix = Buffer.alloc(2);

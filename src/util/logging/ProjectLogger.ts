@@ -50,17 +50,17 @@ const colors = {
 
 
 // CONFIGURE TRANSPORTS
-let fileLogBaseName   = process.env.CS_FILE_LOGGING_BASENAME          || 'crownstone-log';
-let fileLogLevel      = process.env.CS_FILE_LOGGING_LEVEL             || 'info';
-let consoleLogLevel   = process.env.CS_CONSOLE_LOGGING_LEVEL          || 'info';
-let fileLoggingSilent = true;
+let fileLogBaseName     = process.env.CS_FILE_LOGGING_BASENAME          || 'crownstone-log';
+let FILE_LOG_LEVEL      = process.env.CS_FILE_LOGGING_LEVEL             || 'info';
+let CONSOLE_LOG_LEVEL   = process.env.CS_CONSOLE_LOGGING_LEVEL          || 'info';
+let fileLoggingSilent   = true;
 if (process.env.CS_ENABLE_FILE_LOGGING === '1' || process.env.CS_ENABLE_FILE_LOGGING === 'true') {
   fileLoggingSilent = false;
 }
 if (process.argv.indexOf("--silent") >= 0) {
   fileLoggingSilent = true;
 }
-if (fileLogLevel === 'none') {
+if (FILE_LOG_LEVEL === 'none') {
   fileLoggingSilent = true;
 }
 
@@ -85,7 +85,7 @@ const addFileLoggingToLoggers = function() {
     validatePath(process.env.CS_FILE_LOGGING_DIRNAME || '.');
     LoggerTransports.file = new winston.transports.DailyRotateFile({
       filename: fileLogBaseName+'-%DATE%.log',
-      level: fileLogLevel,
+      level: FILE_LOG_LEVEL,
       format: aggregatedFormat,
       datePattern: 'YYYY-MM-DD',
       zippedArchive: false,
@@ -114,19 +114,10 @@ const removeFileLoggingFromLoggers = function() {
 
 export const LoggerTransports = {
   console: new winston.transports.Console({
-    level: consoleLogLevel,
+    level: CONSOLE_LOG_LEVEL,
     format: winston.format.combine(winston.format.colorize(), aggregatedFormat)
   }),
   file: null,
-  setFileLogging: (state) => {
-    if (state) {
-      addFileLoggingToLoggers()
-    }
-    else {
-      removeFileLoggingFromLoggers()
-    }
-  }
-
 }
 // -----------------------------------
 
@@ -135,7 +126,7 @@ let ProjectLogger : any = null;
 let FileTransport = null;
 
 export const generateProjectLogger = function(projectName: string) {
-  return function getLogger(_filename: string, individialLogger=false) {
+  return function getLogger(_filename: string, individialLogger= false) : Logger {
     let filename = path.basename(_filename).replace(path.extname(_filename),'');
     if (individialLogger) {
       let customLogger = _createLogger(projectName + ":" + filename)
@@ -149,7 +140,7 @@ export const generateProjectLogger = function(projectName: string) {
   }
 }
 
-function _createLogger(projectName) {
+function _createLogger(projectName) : Logger {
   let existing = winston.loggers.loggers.get(projectName);
   if (existing !== undefined) {
     return existing;
@@ -200,6 +191,34 @@ function generateCustomLogger(logger, projectName, filename) {
   return {
     _logger:     logger,
     transports:  LoggerTransports,
+    config: {
+      setFileLogging: (state) => {
+        if (state) {
+          addFileLoggingToLoggers()
+        }
+        else {
+          removeFileLoggingFromLoggers()
+        }
+      },
+      setLevel: (level: TransportLevel) => {
+        CONSOLE_LOG_LEVEL = level;
+        FILE_LOG_LEVEL = level;
+        LoggerTransports.console.level = level;
+        if (LoggerTransports.file) {
+          LoggerTransports.file.level = level;
+        }
+      },
+      setConsoleLevel: (level: TransportLevel) => {
+        CONSOLE_LOG_LEVEL = level;
+        LoggerTransports.console.level = level;
+      },
+      setFileLevel: (level: TransportLevel) => {
+        FILE_LOG_LEVEL = level;
+        if (LoggerTransports.file) {
+          LoggerTransports.file.level = level;
+        }
+      }
+    },
     none:        none(    projectName + ":" + filename + " - "),
     critical:    critical(projectName + ":" + filename + " - "),
     error:       error(   projectName + ":" + filename + " - "),

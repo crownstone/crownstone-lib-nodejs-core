@@ -1,7 +1,7 @@
 import {ControlType} from './CrownstoneTypes';
 import {ControlPacket, FactoryResetPacket} from "./BasePackets";
 import {Util} from "../util/Util";
-import { DataWriter } from '../util/DataStepper';
+import {DataWriter} from "../util/DataWriter";
 
 export class ControlPacketsGenerator {
 

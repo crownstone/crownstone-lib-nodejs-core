@@ -38,14 +38,14 @@ const colors = {
   none:     'gray',
   critical: 'bold black redBG',
   error:    'bold red',
-  warn:     'orange',
+  warn:     'bold yellow',
   notice:   'magenta',
   info:     'green',
   debug:    'cyan',
   verbose:  'gray',
   silly:    'white',
 };
-winston.addColors(colors);
+
 // -----------------------------------
 
 
@@ -138,18 +138,18 @@ export const generateProjectLogger = function(projectName: string) {
   return function getLogger(_filename: string, individialLogger=false) {
     let filename = path.basename(_filename).replace(path.extname(_filename),'');
     if (individialLogger) {
-      let customLogger = _(projectName + _filename)
+      let customLogger = _createLogger(projectName + _filename)
       return generateCustomLogger(customLogger, projectName, _filename)
     }
     if (ProjectLogger === null) {
-      ProjectLogger = _(projectName);
+      ProjectLogger = _createLogger(projectName);
     }
 
     return generateCustomLogger(ProjectLogger, projectName, filename);
   }
 }
 
-function _(projectName) {
+function _createLogger(projectName) {
   let transportsToUse = [LoggerTransports.console];
   if (LoggerTransports.file !== null) {
     transportsToUse.push(LoggerTransports.file);
@@ -158,6 +158,7 @@ function _(projectName) {
     levels: levels,
     transports: transportsToUse,
   });
+  winston.addColors(colors);
   return winston.loggers.get(projectName);
 }
 

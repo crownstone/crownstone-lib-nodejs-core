@@ -138,7 +138,7 @@ export const generateProjectLogger = function(projectName: string) {
   return function getLogger(_filename: string, individialLogger=false) {
     let filename = path.basename(_filename).replace(path.extname(_filename),'');
     if (individialLogger) {
-      let customLogger = _createLogger(projectName + _filename)
+      let customLogger = _createLogger(projectName + ":" + filename)
       return generateCustomLogger(customLogger, projectName, _filename)
     }
     if (ProjectLogger === null) {
@@ -150,6 +150,11 @@ export const generateProjectLogger = function(projectName: string) {
 }
 
 function _createLogger(projectName) {
+  let existing = winston.loggers.loggers.get(projectName);
+  if (existing !== undefined) {
+    return existing;
+  }
+
   let transportsToUse = [LoggerTransports.console];
   if (LoggerTransports.file !== null) {
     transportsToUse.push(LoggerTransports.file);

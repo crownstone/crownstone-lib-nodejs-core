@@ -1,14 +1,28 @@
+import path from "path";
+import fs from "fs";
+
 const winston = require('winston');
+require('winston-daily-rotate-file');
 const util = require('util');
 
+
+/** Setting up the formatter**/
 function transform(info : any, opts: any) {
   const args = info[Symbol.for('splat')];
   if (args) { info.message = util.format(info.message, ...args); }
   return info;
 }
-
 function utilFormatter() { return {transform}; }
+// @ts-ignore
+let formatter = winston.format.printf(({level, message, label, timestamp}) => `${timestamp} ${label || '-'} ${level}: ${message}`)
+let aggregatedFormat = winston.format.combine(
+  winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss.SSS'}),
+  utilFormatter(),     // <-- this is what changed
+  formatter,
+);
+// -----------------------------------
 
+// CUSTOM LEVELS AND COLORS
 const levels = {
   none:     0,
   critical: 1,
@@ -20,7 +34,6 @@ const levels = {
   verbose:  7,
   silly:    8
 }
-
 const colors = {
   none:     'gray',
   critical: 'bold black redBG',
@@ -31,80 +44,165 @@ const colors = {
   debug:    'cyan',
   verbose:  'gray',
   silly:    'white',
-}
-
-
-// @ts-ignore
-let formatter = winston.format.printf(({level, message, label, timestamp}) => `${timestamp} ${label || '-'} ${level}: ${message}`)
-let myFormat = winston.format.combine(
-  winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss.SSS'}),
-  utilFormatter(),     // <-- this is what changed
-  formatter,
-)
-const transports = {
-  console:new winston.transports.Console({format: winston.format.combine(winston.format.colorize(), myFormat)}),
-  file:   new winston.transports.File({ filename: 'error.log', level: 'none', format: myFormat }),
-}
-
+};
 winston.addColors(colors);
+// -----------------------------------
 
-let ProjectLogger : any = null;
 
-type logGetter = (filename: string) => ((...args: any[]) => void);
-
-const none : logGetter = function(filename) {
-  return function() { ProjectLogger.none(filename, ...arguments)};
+// CONFIGURE TRANSPORTS
+let fileLogBaseName   = process.env.CS_FILE_LOGGING_BASENAME          || 'crownstone-log';
+let fileLogLevel      = process.env.CS_FILE_LOGGING_LEVEL             || 'info';
+let consoleLogLevel   = process.env.CS_CONSOLE_LOGGING_LEVEL          || 'info';
+let fileLoggingSilent = true;
+if (process.env.CS_ENABLE_FILE_LOGGING === '1' || process.env.CS_ENABLE_FILE_LOGGING === 'true') {
+  fileLoggingSilent = false;
 }
-const critical : logGetter = function(filename) {
-  return function() { ProjectLogger.critical(filename, ...arguments) };
+if (process.argv.indexOf("--silent") >= 0) {
+  fileLoggingSilent = true;
 }
-const error : logGetter = function(filename) {
-  return function() { ProjectLogger.error(filename, ...arguments) };
-}
-const warn : logGetter = function(filename) {
-  return function() { ProjectLogger.warn(filename, ...arguments) };
-}
-const notice : logGetter = function(filename) {
-  return function() { ProjectLogger.notice(filename, ...arguments) };
-}
-const info : logGetter = function(filename) {
-  return function() { ProjectLogger.info(filename, ...arguments) };
-}
-const debug : logGetter = function(filename) {
-  return function() { ProjectLogger.debug(filename, ...arguments) };
-}
-const verbose : logGetter = function(filename) {
-  return function() { ProjectLogger.verbose(filename, ...arguments) };
-}
-const silly : logGetter = function(filename) {
-  return function() { ProjectLogger.silly(filename, ...arguments) };
+if (fileLogLevel === 'none') {
+  fileLoggingSilent = true;
 }
 
-export default function generateProjectLogger(projectName: string) {
-  return function getLogger(filename: string) {
-    if (ProjectLogger === null) {
-      winston.loggers.add(projectName,{
-        levels: levels,
-        transports: [
-          transports.console,
-          transports.file,
-        ],
-      });
-      ProjectLogger = winston.loggers.get(projectName);
-    }
 
-    return {
-      _logger:     ProjectLogger,
-      _transports: transports,
-      none:        none(filename),
-      critical:    critical(filename),
-      error:       error(filename),
-      warn:        warn(filename),
-      notice:      notice(filename),
-      info:        info(filename),
-      debug:       debug(filename),
-      verbose:     verbose(filename),
-      silly:       silly(filename),
+function validatePath(targetPath) {
+  if (fs.existsSync(targetPath)) {
+    return true;
+  }
+  else {
+    let previousPath = path.join(targetPath, '../');
+    if (validatePath(previousPath)) {
+      // create
+      fs.mkdirSync(targetPath);
+      return true;
     }
   }
 }
+
+
+const addFileLoggingToLoggers = function() {
+  if (FileTransport === null) {
+    validatePath(process.env.CS_FILE_LOGGING_DIRNAME || '.');
+    LoggerTransports.file = new winston.transports.DailyRotateFile({
+      filename: fileLogBaseName+'-%DATE%.log',
+      level: fileLogLevel,
+      format: aggregatedFormat,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: false,
+      dirname: process.env.CS_FILE_LOGGING_DIRNAME || '.',
+      maxSize:  '50m',
+      maxFiles: '14d',
+      auditFile: 'crownstone-log-config.json'
+    });
+  }
+
+  let loggers = winston.loggers.loggers.keys();
+  for (let loggerId of loggers) {
+    let logger = winston.loggers.get(loggerId);
+    logger.remove(LoggerTransports.file);
+    logger.add(LoggerTransports.file);
+  }
+}
+const removeFileLoggingFromLoggers = function() {
+  let loggers = winston.loggers.loggers.keys();
+  for (let loggerId of loggers) {
+    let logger = winston.loggers.get(loggerId);
+    logger.remove(LoggerTransports.file);
+  }
+  LoggerTransports.file = null;
+}
+
+export const LoggerTransports = {
+  console: new winston.transports.Console({
+    level: consoleLogLevel,
+    format: winston.format.combine(winston.format.colorize(), aggregatedFormat)
+  }),
+  file: null,
+  setFileLogging: (state) => {
+    if (state) {
+      addFileLoggingToLoggers()
+    }
+    else {
+      removeFileLoggingFromLoggers()
+    }
+  }
+
+}
+// -----------------------------------
+
+
+let ProjectLogger : any = null;
+let FileTransport = null;
+
+export const generateProjectLogger = function(projectName: string) {
+  return function getLogger(_filename: string, individialLogger=false) {
+    let filename = path.basename(_filename).replace(path.extname(_filename),'');
+    if (individialLogger) {
+      let customLogger = _(projectName + _filename)
+      return generateCustomLogger(customLogger, projectName, _filename)
+    }
+    if (ProjectLogger === null) {
+      ProjectLogger = _(projectName);
+    }
+
+    return generateCustomLogger(ProjectLogger, projectName, filename);
+  }
+}
+
+function _(projectName) {
+  let transportsToUse = [LoggerTransports.console];
+  if (LoggerTransports.file !== null) {
+    transportsToUse.push(LoggerTransports.file);
+  }
+  winston.loggers.add(projectName,{
+    levels: levels,
+    transports: transportsToUse,
+  });
+  return winston.loggers.get(projectName);
+}
+
+type _logGetter = (filename: string) => ((...args: any[]) => void);
+const none : _logGetter = function(filename) {
+  return function() { ProjectLogger.none(filename, ...arguments)};
+}
+const critical : _logGetter = function(filename) {
+  return function() { ProjectLogger.critical(filename, ...arguments) };
+}
+const error : _logGetter = function(filename) {
+  return function() { ProjectLogger.error(filename, ...arguments) };
+}
+const warn : _logGetter = function(filename) {
+  return function() { ProjectLogger.warn(filename, ...arguments) };
+}
+const notice : _logGetter = function(filename) {
+  return function() { ProjectLogger.notice(filename, ...arguments) };
+}
+const info : _logGetter = function(filename) {
+  return function() { ProjectLogger.info(filename, ...arguments) };
+}
+const debug : _logGetter = function(filename) {
+  return function() { ProjectLogger.debug(filename, ...arguments) };
+}
+const verbose : _logGetter = function(filename) {
+  return function() { ProjectLogger.verbose(filename, ...arguments) };
+}
+const silly : _logGetter = function(filename) {
+  return function() { ProjectLogger.silly(filename, ...arguments) };
+}
+
+function generateCustomLogger(logger, projectName, filename) {
+  return {
+    _logger:     logger,
+    transports:  LoggerTransports,
+    none:        none(    projectName + ":" + filename + " - "),
+    critical:    critical(projectName + ":" + filename + " - "),
+    error:       error(   projectName + ":" + filename + " - "),
+    warn:        warn(    projectName + ":" + filename + " - "),
+    notice:      notice(  projectName + ":" + filename + " - "),
+    info:        info(    projectName + ":" + filename + " - "),
+    debug:       debug(   projectName + ":" + filename + " - "),
+    verbose:     verbose( projectName + ":" + filename + " - "),
+    silly:       silly(   projectName + ":" + filename + " - "),
+  }
+}
+

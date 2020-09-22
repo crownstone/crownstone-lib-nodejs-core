@@ -63,7 +63,6 @@ let parsePathDeclarations = function(dirPath) {
 let parseFileDeclarations = function(filePath) {
   let filenameArr = filePath.split(separator);
   let filename = filenameArr[filenameArr.length-1].replace(".d.ts","").replace(/[^0-9a-zA-Z]/g,'_');
-
   declarations += fs.readFileSync(filePath) + '\n\n'
 }
 

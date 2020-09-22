@@ -1,5 +1,5 @@
-import {LOG} from "./logging/Log";
-
+import {Logger} from "../Logger";
+const LOG = Logger(__filename);
 
 export class NotificationMerger {
   data;
@@ -31,7 +31,7 @@ export class NotificationMerger {
           this.data = Buffer.concat([this.data,incomingData.slice(1)]);
         }
         else {
-          LOG.warn("----- BLUENET NotificationMerger: missed packet, invalid payload")
+          LOG.warn("missed packet, invalid payload")
         }
       }
       this.lastPacketIndex = counter;

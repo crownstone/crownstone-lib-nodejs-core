@@ -6,34 +6,6 @@ export const UserLevel = {
   unknown: 255,
 };
 
-export const LOG_LEVEL = {
-  VERBOSE: 10,
-  verbose: 10,
-
-  DEBUG:   20,
-  debug:   20,
-
-  INFO:    30,
-  info:    30,
-
-  WARNING: 40,
-  warning: 40,
-
-  ERROR:   50,
-  error:   50,
-
-  NONE:    100,
-  none:    100,
-};
-
-export let LogConfig = {
-  ble     : LOG_LEVEL.info,
-  usb     : LOG_LEVEL.info,
-  events  : LOG_LEVEL.ERROR,
-  cloud   : LOG_LEVEL.info,
-  system  : LOG_LEVEL.info,
-  log     : LOG_LEVEL.info,  // basic default log for general logging
-};
 
 export const CrownstoneErrorType = {
   INPUT_ERROR:                          "INPUT_ERROR",

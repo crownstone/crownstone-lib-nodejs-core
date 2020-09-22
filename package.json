@@ -1,6 +1,6 @@
 {
   "name": "crownstone-core",
-  "version": "0.7.3",
+  "version": "0.7.5",
   "scripts": {
     "start": "tsc -watch",
     "test": "jest --useStderr --clearMocks",
@@ -18,7 +18,8 @@
     "@types/jest": "^25.1.1",
     "@types/node": "^13.5.3",
     "jest": "^25.1.0",
-    "typescript": "3.7.5"
+    "typescript": "3.7.5",
+    "rimraf": "^3.0.2"
   },
   "jest": {
     "moduleFileExtensions": [

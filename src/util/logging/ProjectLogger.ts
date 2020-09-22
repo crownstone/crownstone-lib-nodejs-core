@@ -139,7 +139,7 @@ export const generateProjectLogger = function(projectName: string) {
     let filename = path.basename(_filename).replace(path.extname(_filename),'');
     if (individialLogger) {
       let customLogger = _createLogger(projectName + ":" + filename)
-      return generateCustomLogger(customLogger, projectName, _filename)
+      return generateCustomLogger(customLogger, projectName, filename)
     }
     if (ProjectLogger === null) {
       ProjectLogger = _createLogger(projectName);

@@ -149,17 +149,18 @@ function _createLogger(projectName) : {logger: any, transports: {console: any, f
 }
 
 function generateFileLogger(loggerName) {
-  validatePath(process.env.CS_FILE_LOGGING_DIRNAME || '.');
+  let storagePath =  process.env.CS_FILE_LOGGING_DIRNAME || 'logs';
+  validatePath(storagePath);
   TransportReferences[loggerName].file = new winston.transports.DailyRotateFile({
     filename: fileLogBaseName+'-%DATE%.log',
     level: FILE_LOG_LEVEL,
     format: aggregatedFormat,
     datePattern: 'YYYY-MM-DD',
     zippedArchive: false,
-    dirname: process.env.CS_FILE_LOGGING_DIRNAME || '.',
+    dirname: storagePath,
     maxSize:  '50m',
     maxFiles: '14d',
-    auditFile: 'crownstone-log-config.json'
+    auditFile: path.join(storagePath,'crownstone-log-config.json')
   });
   return TransportReferences[loggerName].file;
 }

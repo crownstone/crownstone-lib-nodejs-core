@@ -4,3 +4,5 @@ coverage
 userData.json
 dist
 test.js
+
+logs/

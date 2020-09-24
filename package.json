@@ -1,6 +1,6 @@
 {
   "name": "crownstone-core",
-  "version": "0.7.9",
+  "version": "0.8.0",
   "scripts": {
     "start": "tsc -watch",
     "test": "jest --useStderr --clearMocks",
@@ -11,15 +11,14 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "aes-js": "^3.1.1",
-    "winston": "^3.3.3",
-    "winston-daily-rotate-file": "^4.5.0"
+    "crownstone-logger": "^0.1.0"
   },
   "devDependencies": {
     "@types/jest": "^25.1.1",
     "@types/node": "^13.5.3",
     "jest": "^25.1.0",
-    "typescript": "3.7.5",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "typescript": "3.7.5"
   },
   "jest": {
     "moduleFileExtensions": [

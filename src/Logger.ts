@@ -1,3 +1,3 @@
-import {generateProjectLogger} from "./util/logging/ProjectLogger";
+import {generateProjectLogger} from "crownstone-logger";
 
 export const Logger : LogGetter = generateProjectLogger("crownstone:core");

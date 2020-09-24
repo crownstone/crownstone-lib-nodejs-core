@@ -1,5 +1,4 @@
 /// <reference path=".\declarations\declarations.d.ts" />
-/// <reference path=".\declarations\logger_types.d.ts" />
 import {CrownstoneSettings, } from "./containers/CrownstoneSettings"
 import {UserLevel, CrownstoneErrorType, GetPesistenceMode, SetPesistenceMode, } from "./declarations/enums"
 import {Logger, } from "./Logger"
@@ -25,7 +24,6 @@ import {DataStepper, } from "./util/DataStepper"
 import {DataWriter, } from "./util/DataWriter"
 import {EncryptionHandler, SessionData, EncryptedPackageBase, EncryptedPackage, } from "./util/EncryptionHandler"
 import {EventBusClass, } from "./util/EventBus"
-import {generateProjectLogger, } from "./util/logging/ProjectLogger"
 import {NotificationMerger, } from "./util/NotificationMerger"
 import {PublicUtil, } from "./util/PublicUtil"
 import {reconstructTimestamp, } from "./util/Timestamp"
@@ -82,7 +80,6 @@ export {
   StoneMultiSwitchPacket,
   UserLevel,
   Util,
-  generateProjectLogger,
   parseOpCode3,
   parseOpCode3_type0,
   parseOpCode3_type1,

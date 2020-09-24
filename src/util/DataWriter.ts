@@ -2,8 +2,6 @@ import {CrownstoneError} from "../protocol/CrownstoneError";
 import {CrownstoneErrorType} from "../declarations/enums";
 
 
-
-
 export class DataWriter {
 
   buffer : Buffer;
@@ -45,13 +43,10 @@ export class DataWriter {
     this._place(data, 1, "writeUInt8");
   }
 
-
-
-
   _place(data, count, method : "writeUInt16LE" | "writeUInt8" | "writeUInt32LE") {
-    this.position += count;
-    if (this.totalSize - 1 - this.position > 0) {
+    if (this.totalSize - (this.position+count) >= 0) {
       this.buffer[method](data, this.position);
+      this.position += count;
     }
     else {
       throw new CrownstoneError(CrownstoneErrorType.BUFFER_TOO_SHORT_FOR_DATA, "You tried to push more data into the buffer than you have allocated space for.")

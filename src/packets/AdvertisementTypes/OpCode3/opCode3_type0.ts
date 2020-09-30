@@ -41,7 +41,7 @@ export function parseOpCode3_type0(serviceData : ServiceData, data : Buffer) {
     serviceData.powerUsageReal     = realPower / 8;
     serviceData.powerUsageApparent = serviceData.powerUsageReal / serviceData.powerFactor;
 
-    serviceData.accumulatedEnergy  = data.readInt32LE(8);
+    serviceData.accumulatedEnergy  = data.readInt32LE(8) * 64;
 
     serviceData.partialTimestamp   = data.readUInt16LE(12);
     serviceData.uniqueIdentifier   = serviceData.partialTimestamp;

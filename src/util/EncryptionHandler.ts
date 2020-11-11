@@ -37,6 +37,10 @@ class AESCounter {
 
 }
 
+const STATIC_VALIDATION_VALUE = 0xCAFEBABE;
+const STATIC_VALIDATION_BUFFER = Buffer.alloc(4);
+STATIC_VALIDATION_BUFFER.writeUInt32LE(STATIC_VALIDATION_VALUE, 0)
+
 export class EncryptionHandler {
 
   static decryptSessionNonce(rawNonce: Buffer, key: Buffer) {
@@ -170,7 +174,7 @@ export class EncryptionHandler {
     let paddedPayload = Buffer.alloc(packetSize, 0);
 
     // copy the validation key into the buffer.
-    sessionData.validationKey.copy(paddedPayload,0,0,overheadSize);
+    STATIC_VALIDATION_BUFFER.copy(paddedPayload,0,0,overheadSize);
 
     // write the length into the buffer.
     paddedPayload.writeUInt16LE(data.length, SESSION_KEY_LENGTH);
@@ -194,8 +198,8 @@ export class EncryptionHandler {
   }
 
 
-  static verifyAndExtractDecryption(decrypted : Buffer, sessionData: SessionData) {
-    if (decrypted.readUInt32LE(0) === sessionData.validationKey.readUInt32LE(0)) {
+  static verifyAndExtractDecryption(decrypted : Buffer) {
+    if (decrypted.readUInt32LE(0) === STATIC_VALIDATION_BUFFER.readUInt32LE(0)) {
       // remove checksum from decyption and return payload
       let result = Buffer.alloc(decrypted.length - SESSION_KEY_LENGTH);
       decrypted.copy(result,0, SESSION_KEY_LENGTH);
@@ -283,7 +287,6 @@ export class EncryptionHandler {
 
 export class SessionData {
   sessionNonce  = null;
-  validationKey = null;
 
   constructor(sessionData : number[] | Buffer = null) {
     if (sessionData !== null) {
@@ -301,7 +304,6 @@ export class SessionData {
     else {
       this.sessionNonce = Buffer.from(data);
     }
-    this.validationKey = this.sessionNonce.slice(0,4);
   }
 
   generate() {

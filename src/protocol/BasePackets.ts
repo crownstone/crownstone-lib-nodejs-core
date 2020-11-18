@@ -142,7 +142,7 @@ export class ControlStateSetPacket extends BasePacket {
   id : number = 0;
   persistenceMode : number = SetPesistenceMode.STORED;
 
-  constructor(stateType, id, persistenceMode) {
+  constructor(stateType, id = 0, persistenceMode = SetPesistenceMode.STORED) {
     super(ControlType.SET_STATE);
 
     this.stateType = stateType;

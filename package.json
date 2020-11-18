@@ -1,6 +1,6 @@
 {
   "name": "crownstone-core",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "scripts": {
     "start": "tsc -watch",
     "test": "jest --useStderr --clearMocks",

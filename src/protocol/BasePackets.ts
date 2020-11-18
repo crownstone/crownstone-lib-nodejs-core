@@ -170,7 +170,7 @@ export class ControlStateSetPacket extends BasePacket {
     persistenceBuffer.writeUInt8(this.persistenceMode,0);
     persistenceBuffer.writeUInt8(0,1);
 
-    buffer = Buffer.concat([buffer, idBuffer, persistenceBuffer, this.payloadBuffer]);
+    buffer = Buffer.concat([buffer, stateTypeBuffer, idBuffer, persistenceBuffer, this.payloadBuffer]);
 
     return buffer;
   }

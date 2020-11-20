@@ -22,7 +22,7 @@ import {StoneMultiSwitchPacket, MeshMultiSwitchPacket, } from "./protocol/MeshPa
 import {CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID, DFU_ADVERTISEMENT_SERVICE_UUID, CSServices, DFUServices, ServiceUUIDArray, } from "./protocol/Services"
 import {DataStepper, } from "./util/DataStepper"
 import {DataWriter, } from "./util/DataWriter"
-import {EncryptionHandler, SessionData, EncryptedPackageBase, EncryptedPackage, } from "./util/EncryptionHandler"
+import {EncryptionHandler, EncryptedPackageBase, EncryptedPackage, } from "./util/EncryptionHandler"
 import {EventBusClass, } from "./util/EventBus"
 import {NotificationMerger, } from "./util/NotificationMerger"
 import {PublicUtil, } from "./util/PublicUtil"
@@ -73,7 +73,6 @@ export {
   ResultValueInv,
   ServiceData,
   ServiceUUIDArray,
-  SessionData,
   SetPesistenceMode,
   SetupCharacteristics,
   StateType,

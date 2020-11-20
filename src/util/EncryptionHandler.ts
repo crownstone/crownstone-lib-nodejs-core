@@ -11,7 +11,7 @@ let BLOCK_LENGTH             = 16;
 let NONCE_LENGTH             = 16;
 let SESSION_DATA_LENGTH      = 5;
 let SESSION_KEY_LENGTH       = 4;
-let MESSAGE_SIZE_LENGTH      = 4;
+let MESSAGE_SIZE_LENGTH      = 2;
 let PACKET_USER_LEVEL_LENGTH = 1;
 let PACKET_NONCE_LENGTH      = 3;
 let CHECKSUM                 = 0xcafebabe;
@@ -58,8 +58,6 @@ export class EncryptionHandler {
       throw new CrownstoneError(CrownstoneErrorType.COULD_NOT_VALIDATE_SESSION_NONCE, "Could not validate Session Nonce", 301);
     }
   }
-
-
 
   // static encrypt( data : Buffer, settings : CrownstoneSettings ) {
   //   if (settings.sessionNonce == null) {
@@ -124,12 +122,12 @@ export class EncryptionHandler {
   // }
 
 
-  static _decrypt(data : Buffer, sessionData: SessionData, settings: CrownstoneSettings) {
+  static _decrypt(data : Buffer, sessionData: Buffer, settings: CrownstoneSettings) {
     let encryptedPackage = new EncryptedPackage(data);
 
     let key = EncryptionHandler._getKey(encryptedPackage.userLevel, settings);
 
-    let IV = EncryptionHandler.generateIV(encryptedPackage.nonce, sessionData.sessionNonce);
+    let IV = EncryptionHandler.generateIV(encryptedPackage.nonce, sessionData);
 
     let counterBuffer = Buffer.alloc(BLOCK_LENGTH);
     IV.copy(counterBuffer,0,0);
@@ -142,10 +140,10 @@ export class EncryptionHandler {
   }
 
 
-  static decryptCTR(data : Buffer, sessionData: SessionData, key: Buffer ) {
+  static decryptCTR(data : Buffer, sessionData: Buffer, key: Buffer ) {
     let encryptedPackage = new EncryptedPackage(data);
 
-    let IV = EncryptionHandler.generateIV(encryptedPackage.nonce, sessionData.sessionNonce);
+    let IV = EncryptionHandler.generateIV(encryptedPackage.nonce, sessionData);
 
     let counterBuffer = Buffer.alloc(BLOCK_LENGTH);
     IV.copy(counterBuffer,0,0);
@@ -157,12 +155,12 @@ export class EncryptionHandler {
     return Buffer.from(decryptedBytes);
   }
 
-  static encryptCTR(data : Buffer, sessionData: SessionData, key: Buffer, keyIndex: number) {
+  static encryptCTR(data : Buffer, sessionData: Buffer, key: Buffer, keyIndex: number) {
     // create Nonce array
     let nonce = Buffer.alloc(PACKET_NONCE_LENGTH);
     EncryptionHandler.fillWithRandomNumbers(nonce);
 
-    let IV = EncryptionHandler.generateIV(nonce, sessionData.sessionNonce);
+    let IV = EncryptionHandler.generateIV(nonce, sessionData);
     let counterBuffer = Buffer.alloc(BLOCK_LENGTH);
     IV.copy(counterBuffer,0,0);
 
@@ -281,35 +279,6 @@ export class EncryptionHandler {
       return;
     }
     crypto.randomFillSync(buff, 0, buff.length);
-  }
-}
-
-
-export class SessionData {
-  sessionNonce  = null;
-
-  constructor(sessionData : number[] | Buffer = null) {
-    if (sessionData !== null) {
-      this.load(sessionData)
-    }
-  }
-
-  load(data : number[] | Buffer) {
-    if (data.length != SESSION_DATA_LENGTH) {
-      throw "BleError.INVALID_SESSION_DATA"
-    }
-    if (data instanceof Buffer) {
-      this.sessionNonce = data;
-    }
-    else {
-      this.sessionNonce = Buffer.from(data);
-    }
-  }
-
-  generate() {
-    let data = Buffer.alloc(5);
-    EncryptionHandler.fillWithRandomNumbers(data);
-    this.load(data);
   }
 }
 

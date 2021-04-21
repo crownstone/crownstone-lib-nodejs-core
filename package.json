@@ -16,9 +16,12 @@
   "devDependencies": {
     "@types/jest": "^25.1.1",
     "@types/node": "^13.5.3",
-    "jest": "^25.1.0",
     "rimraf": "^3.0.2",
-    "typescript": "3.7.5"
+    "jest": "^26.6.3",
+    "jest-cli":  "^26.6.3",
+    "jest-date-mock": "^1.0.8",
+    "ts-jest": "^26.5.1",
+    "typescript": "^4.2.3"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -37,6 +40,9 @@
     ],
     "collectCoverage": true,
     "collectCoverageFrom": []
+  },
+  "engines": {
+    "node": ">=10.4"
   },
   "license": "MIT"
 }

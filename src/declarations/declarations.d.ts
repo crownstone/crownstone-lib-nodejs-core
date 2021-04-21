@@ -46,3 +46,9 @@ interface CrownstoneErrorJson {
   dimmerOffFailure  : boolean,
   bitMask           : number,
 }
+
+interface CuckooExtendedFingerprint {
+  fingerprint: number,
+  bucketA: number,
+  bucketB: number
+}

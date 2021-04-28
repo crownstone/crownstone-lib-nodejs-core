@@ -1,7 +1,9 @@
-/// <reference path=".\declarations\declarations.d.ts" />
+/// <reference path="./declarations/declarations.d.ts" />
+import {Logger, } from "./Logger"
 import {CrownstoneSettings, } from "./containers/CrownstoneSettings"
 import {UserLevel, CrownstoneErrorType, GetPesistenceMode, SetPesistenceMode, } from "./declarations/enums"
-import {Logger, } from "./Logger"
+import {ExtendedFingerprint, CuckooFilter, } from "./filters/CuckooFilter"
+import {RandomGeneratorMSWS, } from "./filters/randomGenerator"
 import {Advertisement, } from "./packets/Advertisement"
 import {parseOpCode3_type0, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type0"
 import {parseOpCode3_type1, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type1"
@@ -13,6 +15,7 @@ import {CrownstoneErrors, } from "./packets/CrownstoneErrors"
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6, } from "./packets/Parsers"
 import {ResultPacket, } from "./packets/ResultPacket"
 import {ServiceData, } from "./packets/ServiceData"
+import {FilterMetaData, FilterInputMacAddress, FilterInputAdData, FilterOutputDescriptionReport, FilterOutputDescriptionTrackAdData, FilterOutputDescriptionTrackMacAddress, FilterInputTypes, FilterOutputDescriptionTypes, FilterOutputDescriptionReportTypes, FilterOutputDescriptionTrackTypes, CuckooFilterPacketData, CuckooExtendedFingerprintData, } from "./packets/filter/FilterPackets"
 import {BasePacket, ControlPacket, FactoryResetPacket, ControlStateGetPacket, ControlStateSetPacket, } from "./protocol/BasePackets"
 import {DeviceCharacteristics, CrownstoneCharacteristics, SetupCharacteristics, DFUCharacteristics, } from "./protocol/Characteristics"
 import {ControlPacketsGenerator, } from "./protocol/ControlPackets"
@@ -50,6 +53,9 @@ export {
   CrownstoneErrorType,
   CrownstoneErrors,
   CrownstoneSettings,
+  CuckooExtendedFingerprintData,
+  CuckooFilter,
+  CuckooFilterPacketData,
   DFUCharacteristics,
   DFUServices,
   DFU_ADVERTISEMENT_SERVICE_UUID,
@@ -61,13 +67,25 @@ export {
   EncryptedPackageBase,
   EncryptionHandler,
   EventBusClass,
+  ExtendedFingerprint,
   FactoryResetPacket,
+  FilterInputAdData,
+  FilterInputMacAddress,
+  FilterInputTypes,
+  FilterMetaData,
+  FilterOutputDescriptionReport,
+  FilterOutputDescriptionReportTypes,
+  FilterOutputDescriptionTrackAdData,
+  FilterOutputDescriptionTrackMacAddress,
+  FilterOutputDescriptionTrackTypes,
+  FilterOutputDescriptionTypes,
   GetPesistenceMode,
   Logger,
   MeshMultiSwitchPacket,
   NotificationMerger,
   ProcessType,
   PublicUtil,
+  RandomGeneratorMSWS,
   ResultPacket,
   ResultValue,
   ResultValueInv,

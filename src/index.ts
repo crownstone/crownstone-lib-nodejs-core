@@ -2,7 +2,7 @@
 import {Logger, } from "./Logger"
 import {CrownstoneSettings, } from "./containers/CrownstoneSettings"
 import {UserLevel, CrownstoneErrorType, GetPesistenceMode, SetPesistenceMode, } from "./declarations/enums"
-import {ExtendedFingerprint, CuckooFilter, } from "./filters/CuckooFilter"
+import {ExtendedFingerprint, generateCuckooFilterParameters, CuckooFilterCore, CuckooFilter, } from "./filters/CuckooFilter"
 import {RandomGeneratorMSWS, } from "./filters/randomGenerator"
 import {Advertisement, } from "./packets/Advertisement"
 import {parseOpCode3_type0, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type0"
@@ -15,7 +15,7 @@ import {CrownstoneErrors, } from "./packets/CrownstoneErrors"
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6, } from "./packets/Parsers"
 import {ResultPacket, } from "./packets/ResultPacket"
 import {ServiceData, } from "./packets/ServiceData"
-import {FilterMetaData, FilterInputMacAddress, FilterInputAdData, FilterOutputDescriptionReport, FilterOutputDescriptionTrackAdData, FilterOutputDescriptionTrackMacAddress, FilterInputTypes, FilterOutputDescriptionTypes, FilterOutputDescriptionReportTypes, FilterOutputDescriptionTrackTypes, CuckooFilterPacketData, CuckooExtendedFingerprintData, } from "./packets/filter/FilterPackets"
+import {FilterType, FilterMetaData, FilterInputMacAddress, FilterInputAdData, FilterOutputDescriptionReport, FilterOutputDescriptionTrackAdData, FilterOutputDescriptionTrackMacAddress, FilterInputType, FilterOutputDescriptionType, FilterOutputDescriptionReportType, FilterOutputDescriptionTrackType, CuckooFilterPacketData, CuckooExtendedFingerprintData, getFilterMetaData, } from "./packets/filter/FilterPackets"
 import {BasePacket, ControlPacket, FactoryResetPacket, ControlStateGetPacket, ControlStateSetPacket, } from "./protocol/BasePackets"
 import {DeviceCharacteristics, CrownstoneCharacteristics, SetupCharacteristics, DFUCharacteristics, } from "./protocol/Characteristics"
 import {ControlPacketsGenerator, } from "./protocol/ControlPackets"
@@ -55,6 +55,7 @@ export {
   CrownstoneSettings,
   CuckooExtendedFingerprintData,
   CuckooFilter,
+  CuckooFilterCore,
   CuckooFilterPacketData,
   DFUCharacteristics,
   DFUServices,
@@ -71,14 +72,15 @@ export {
   FactoryResetPacket,
   FilterInputAdData,
   FilterInputMacAddress,
-  FilterInputTypes,
+  FilterInputType,
   FilterMetaData,
   FilterOutputDescriptionReport,
-  FilterOutputDescriptionReportTypes,
+  FilterOutputDescriptionReportType,
   FilterOutputDescriptionTrackAdData,
   FilterOutputDescriptionTrackMacAddress,
-  FilterOutputDescriptionTrackTypes,
-  FilterOutputDescriptionTypes,
+  FilterOutputDescriptionTrackType,
+  FilterOutputDescriptionType,
+  FilterType,
   GetPesistenceMode,
   Logger,
   MeshMultiSwitchPacket,
@@ -97,6 +99,8 @@ export {
   StoneMultiSwitchPacket,
   UserLevel,
   Util,
+  generateCuckooFilterParameters,
+  getFilterMetaData,
   parseOpCode3,
   parseOpCode3_type0,
   parseOpCode3_type1,

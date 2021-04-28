@@ -1,5 +1,5 @@
 import {Util} from "../../src/util/Util";
-import {CuckooFilter} from "../../src/filters/cuckooFilter";
+import {CuckooFilter, CuckooFilterCore, generateCuckooFilterParameters} from "../../src/filters/cuckooFilter";
 import {RandomGeneratorMSWS} from "../../src/filters/randomGenerator";
 
 beforeEach(async () => {})
@@ -18,7 +18,7 @@ test("Run Cuckoo test 0", async () => {
   let nests_per_bucket = 4
   let load_factor = 0.75
 
-  let filter = new CuckooFilter(max_buckets_log2, nests_per_bucket)
+  let filter = new CuckooFilterCore(max_buckets_log2, nests_per_bucket)
 
   // setup test variables
   let max_items = filter.getMaxFingerprintCount()
@@ -53,7 +53,7 @@ test("Run Cuckoo test 1", async () => {
   let max_buckets_log2 = 7
   let nests_per_bucket = 4
 
-  let filter = new CuckooFilter(max_buckets_log2, nests_per_bucket)
+  let filter = new CuckooFilterCore(max_buckets_log2, nests_per_bucket)
 
   let data = new Buffer('test','utf-8')
 
@@ -72,7 +72,7 @@ test("Run Cuckoo test 2", async () => {
   let nests_per_bucket = 4
   let load_factor = 0.95
 
-  let filter = new CuckooFilter(max_buckets_log2, nests_per_bucket)
+  let filter = new CuckooFilterCore(max_buckets_log2, nests_per_bucket)
 
   let max_items = filter.getMaxFingerprintCount()
   let num_items_to_test = Math.floor(max_items * load_factor);
@@ -126,6 +126,10 @@ test("Run Cuckoo test 2", async () => {
   expect(checkTolerance(false_negatives, mac_random.length, 0)).toBeTruthy()
   expect(checkTolerance(false_positives, mac_random.length, 0.05)).toBeTruthy()
   expect(false_positives).toBe(4)
+})
+
+test("Generate cuckoo parameters", async () => {
+  expect(generateCuckooFilterParameters(1)).toStrictEqual({bucketCountLog2:0, nestPerBucket: 2})
 })
 
 function checkTolerance(fails, total, tolerance) {

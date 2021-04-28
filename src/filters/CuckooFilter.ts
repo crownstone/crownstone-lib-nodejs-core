@@ -13,15 +13,29 @@ export class ExtendedFingerprint implements CuckooExtendedFingerprint{
   }
 }
 
-export class CuckooFilter {
+export function generateCuckooFilterParameters(amountOfItems) {
+  let nestPerBucket     = 4;
+  let requiredFitAmount = amountOfItems/0.95;
+  let bucketCount       = requiredFitAmount / nestPerBucket;
+
+  let bucketCountLog2   = Math.max(0,Math.ceil(Math.log2(bucketCount)));
+  let actualBucketCount = Math.pow(2, bucketCountLog2);
+  let requiredNestSize  = Math.ceil(requiredFitAmount / actualBucketCount);
+
+  return {
+    bucketCountLog2: bucketCountLog2,
+    nestPerBucket:   requiredNestSize,
+  };
+}
+
+export class CuckooFilterCore {
 
   max_kick_attempts : number = 100;
-
-  bucketCountLog2 : number;
-  bucketCount : number;
-  nestPerBucket: number;
-  victim : ExtendedFingerprint;
-  bucketArray : number[] = [];
+  bucketCountLog2   : number;
+  bucketCount       : number;
+  nestPerBucket     : number;
+  victim            : ExtendedFingerprint;
+  bucketArray       : number[] = [];
 
   constructor(bucketCountLog2: number, nestPerBucket: number) {
     this.bucketCountLog2 = bucketCountLog2;
@@ -242,3 +256,10 @@ export class CuckooFilter {
   }
 }
 
+
+export class CuckooFilter extends CuckooFilterCore {
+  constructor(amountOfItems: number) {
+    let params = generateCuckooFilterParameters(amountOfItems);
+    super(params.bucketCountLog2, params.nestPerBucket);
+  }
+}

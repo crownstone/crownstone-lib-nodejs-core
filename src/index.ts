@@ -15,8 +15,8 @@ import {CrownstoneErrors, } from "./packets/CrownstoneErrors"
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6, } from "./packets/Parsers"
 import {ResultPacket, } from "./packets/ResultPacket"
 import {ServiceData, } from "./packets/ServiceData"
-import {FilterType, FilterMetaData, FilterInputMacAddress, FilterInputAdData, FilterOutputDescriptionReport, FilterOutputDescriptionTrackAdData, FilterOutputDescriptionTrackMacAddress, FilterInputType, FilterOutputDescriptionType, FilterOutputDescriptionReportType, FilterOutputDescriptionTrackType, CuckooFilterPacketData, CuckooExtendedFingerprintData, getFilterMetaData, } from "./packets/filter/FilterPackets"
-import {BasePacket, ControlPacket, FactoryResetPacket, ControlStateGetPacket, ControlStateSetPacket, } from "./protocol/BasePackets"
+import {FilterType, FilterInputType, FilterOutputDescriptionType, FilterMetaData, FilterFormatMacAddress, FilterFormatAdData, FilterFormatMaskedAdData, FilterOutputDescription, CuckooFilterPacketData, CuckooExtendedFingerprintData, getFilterCRC, getMasterCRC, FilterUploadChunk, FilterChunker, FilterSummaries, FilterSummary, } from "./packets/filter/FilterPackets"
+import {SUPPORTED_PROTOCOL_VERSION, FILTER_PROTOCOL, BasePacket, ControlPacket, FactoryResetPacket, ControlStateGetPacket, ControlStateSetPacket, AssetFilterCommand, } from "./protocol/BasePackets"
 import {DeviceCharacteristics, CrownstoneCharacteristics, SetupCharacteristics, DFUCharacteristics, } from "./protocol/Characteristics"
 import {ControlPacketsGenerator, } from "./protocol/ControlPackets"
 import {CrownstoneError, } from "./protocol/CrownstoneError"
@@ -36,6 +36,7 @@ import {Util, } from "./util/Util"
 
 export {
   Advertisement,
+  AssetFilterCommand,
   BasePacket,
   BroadcastTypes,
   CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID,
@@ -69,18 +70,20 @@ export {
   EncryptionHandler,
   EventBusClass,
   ExtendedFingerprint,
+  FILTER_PROTOCOL,
   FactoryResetPacket,
-  FilterInputAdData,
-  FilterInputMacAddress,
+  FilterChunker,
+  FilterFormatAdData,
+  FilterFormatMacAddress,
+  FilterFormatMaskedAdData,
   FilterInputType,
   FilterMetaData,
-  FilterOutputDescriptionReport,
-  FilterOutputDescriptionReportType,
-  FilterOutputDescriptionTrackAdData,
-  FilterOutputDescriptionTrackMacAddress,
-  FilterOutputDescriptionTrackType,
+  FilterOutputDescription,
   FilterOutputDescriptionType,
+  FilterSummaries,
+  FilterSummary,
   FilterType,
+  FilterUploadChunk,
   GetPesistenceMode,
   Logger,
   MeshMultiSwitchPacket,
@@ -91,6 +94,7 @@ export {
   ResultPacket,
   ResultValue,
   ResultValueInv,
+  SUPPORTED_PROTOCOL_VERSION,
   ServiceData,
   ServiceUUIDArray,
   SetPesistenceMode,
@@ -100,7 +104,8 @@ export {
   UserLevel,
   Util,
   generateCuckooFilterParameters,
-  getFilterMetaData,
+  getFilterCRC,
+  getMasterCRC,
   parseOpCode3,
   parseOpCode3_type0,
   parseOpCode3_type1,

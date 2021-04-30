@@ -163,7 +163,7 @@ export const Util = {
     );
   },
 
-  crc16_ccitt(arr8 : Buffer | number[]) {
+  crc16_ccitt(arr8 : Buffer | number[]) : number {
     let crc = 0xFFFF
 
     for (let i = 0; i < arr8.length; i++) {

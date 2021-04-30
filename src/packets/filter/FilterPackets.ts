@@ -1,74 +1,44 @@
 import {DataWriter} from "../../util/DataWriter";
 import {Util} from "../../util/Util";
+import {DataStepper} from "../../util/DataStepper";
 
-type filter_macAddressType = "MAC_ADDRESS"
-type filter_adDataType     = "AD_DATA"
-
-type filter_outputReportType     = "REPORT"
-type filter_outputReportDataType = "FULL_MAC_ADDRESS_RSSI"
-
-type filter_outputTrackType                         = "TRACK"
-type filter_outputTrackRepresentationMacAddressType = "MAC_ADDRESS"
-type filter_outputTrackRepresentationAdType         = "AD_DATA"
-
-interface InputMacAddress {
-  type: filter_macAddressType
-}
-
-interface InputAdData {
-  type:   filter_adDataType,
-  adType: number,
-  mask:   number
-}
-
-interface OutputDescriptionReport {
-  type:           filter_outputReportType,
-  representation: filter_outputReportDataType,
-}
-
-interface OutputDescriptionTrackMacAddress {
-  type:           filter_outputTrackType,
-  representation: filter_outputTrackRepresentationMacAddressType,
-}
-
-interface OutputDescriptionTrackAdData {
-  type:           filter_outputTrackType,
-  representation: filter_outputTrackRepresentationAdType,
-  adType: number,
-  mask:   number
-}
-
+type filterPacketFormat = FilterFormatMacAddress | FilterFormatAdData | FilterFormatMaskedAdData;
 
 export const FilterType = {
   CUCKCOO_V1: 0
 }
 
-export class FilterMetaData {
-  type: number  // this is a protocol kind of thing. It defines the rest of this packet, as well as the type of the filter
-  filterCRC: number;
-  profileId: number;
-  input: FilterInputMacAddress |
-         FilterInputAdData
-  outputDescription: FilterOutputDescriptionReport      |
-                     FilterOutputDescriptionTrackAdData |
-                     FilterOutputDescriptionTrackMacAddress
+export const FilterInputType = {
+  MAC_ADDRESS:    0,
+  AD_DATA:        1,
+  MASKED_AD_DATA: 2,
+}
 
-  constructor() {}
+export const FilterOutputDescriptionType = {
+  MAC_ADDRESS_REPORT:   0,
+  SHORT_ASSET_ID_TRACK: 1,
+}
+
+
+
+export class FilterMetaData {
+  type:              number;
+  profileId:         number;
+  input:             filterPacketFormat
+  outputDescription: FilterOutputDescription
 
   getPacket() : Buffer {
     let writer = new DataWriter(4);
-    writer.putUInt8(this.type)
-    writer.putUInt16(this.filterCRC)
-    writer.putUInt8(this.profileId)
-    writer.putBuffer(this.input.getPacket())
-    writer.putBuffer(this.outputDescription.getPacket())
+    writer.putUInt8(this.type);
+    writer.putUInt8(this.profileId);
+    writer.putBuffer(this.input.getPacket());
+    writer.putBuffer(this.outputDescription.getPacket());
 
     return writer.getBuffer();
   }
 }
 
-
-export class FilterInputMacAddress {
+export class FilterFormatMacAddress {
   type: number = FilterInputType.MAC_ADDRESS;
 
   getPacket() : Buffer {
@@ -78,8 +48,24 @@ export class FilterInputMacAddress {
   }
 }
 
-export class FilterInputAdData {
+export class FilterFormatAdData {
   type:   number = FilterInputType.AD_DATA;
+  adType: number
+
+  constructor(adType: number) {
+    this.adType = adType;
+  }
+
+  getPacket() : Buffer {
+    let writer = new DataWriter(2);
+    writer.putUInt8(this.type)
+    writer.putUInt8(this.adType)
+    return writer.getBuffer();
+  }
+}
+
+export class FilterFormatMaskedAdData {
+  type:   number = FilterInputType.MASKED_AD_DATA;
   adType: number
   mask:   number
 
@@ -97,69 +83,25 @@ export class FilterInputAdData {
   }
 }
 
-export class FilterOutputDescriptionReport {
-  type:           number = FilterOutputDescriptionType.REPORT;
-  representation: number = FilterOutputDescriptionReportType.MAC_ADDRESS
+export class FilterOutputDescription {
+  type:   number;
+  format: filterPacketFormat | null
+
+  constructor(type: number, format: filterPacketFormat | null = null) {
+    this.type   = type;
+    this.format = format;
+  }
 
   getPacket() : Buffer {
-    let writer = new DataWriter(2);
-    writer.putUInt8(this.type)
-    writer.putUInt8(this.representation)
+    let writer = new DataWriter(1);
+    writer.putUInt8(this.type);
+    if (this.format !== null) {
+      writer.putBuffer(this.format.getPacket())
+    }
     return writer.getBuffer();
   }
 }
 
-export class FilterOutputDescriptionTrackAdData {
-  type:           number = FilterOutputDescriptionType.TRACK;
-  representation: number = FilterOutputDescriptionTrackType.AD_DATA;
-  adType:         number
-  mask:           number
-
-  constructor(adType: number, mask: number) {
-    this.adType = adType;
-    this.mask   = mask;
-  }
-
-  getPacket() : Buffer {
-    let writer = new DataWriter(7);
-    writer.putUInt8(this.type)
-    writer.putUInt8(this.representation)
-    writer.putUInt8(this.adType)
-    writer.putUInt32(this.mask);
-    return writer.getBuffer();
-  }
-}
-
-export class FilterOutputDescriptionTrackMacAddress {
-  type:           number = FilterOutputDescriptionType.TRACK;
-  representation: number = FilterOutputDescriptionTrackType.MAC_ADDRESS;
-
-  getPacket() : Buffer {
-    let writer = new DataWriter(2);
-    writer.putUInt8(this.type)
-    writer.putUInt8(this.representation)
-    return writer.getBuffer();
-  }
-}
-
-export const FilterInputType = {
-  MAC_ADDRESS: 0,
-  AD_DATA:     1,
-}
-
-export const FilterOutputDescriptionType = {
-  TRACK:  0,
-  REPORT: 1,
-}
-
-export const FilterOutputDescriptionReportType = {
-  MAC_ADDRESS: 0,
-}
-
-export const FilterOutputDescriptionTrackType = {
-  MAC_ADDRESS: 0,
-  AD_DATA:     1,
-}
 
 
 export class CuckooFilterPacketData {
@@ -216,41 +158,137 @@ export class CuckooExtendedFingerprintData {
   }
 }
 
-export function getFilterMetaData(
-  filterType : number,
-  filterPacket : Buffer,
-  profileId : number,
-  inputData: InputMacAddress | InputAdData,
-  outputDescription: OutputDescriptionReport | OutputDescriptionTrackMacAddress | OutputDescriptionTrackAdData
-) {
-  let meta = new FilterMetaData();
 
-  meta.type      = filterType;
-  meta.profileId = profileId;
-
-  switch (inputData.type) {
-    case "MAC_ADDRESS": meta.input = new FilterInputMacAddress(); break;
-    case "AD_DATA":     meta.input = new FilterInputAdData( inputData.adType, inputData.mask ); break;
-  }
-
-  switch (outputDescription.type) {
-    case "REPORT": meta.outputDescription = new FilterOutputDescriptionReport(); break;
-    case "TRACK":
-      switch (outputDescription.representation) {
-        case "MAC_ADDRESS": meta.outputDescription = new FilterOutputDescriptionTrackMacAddress(); break;
-        case "AD_DATA":     meta.outputDescription = new FilterOutputDescriptionTrackAdData(outputDescription.adType, outputDescription.mask); break;
-      }
-  }
-
+/**
+ * Get the CRC for this filter based on the metaData and the filterPacket.
+ * @param metadata
+ * @param filterPacket
+ */
+export function getFilterCRC(metadata: FilterMetaData, filterPacket: Buffer) : number {
   // Get filterCRC
   let dataWriter = new DataWriter(2);
-  dataWriter.putUInt8(meta.type);
-  dataWriter.putBuffer(meta.input.getPacket())
-  dataWriter.putBuffer(meta.outputDescription.getPacket())
-  dataWriter.putUInt8(meta.profileId);
+  dataWriter.putUInt8(metadata.type);
+  dataWriter.putBuffer(metadata.input.getPacket())
+  dataWriter.putBuffer(metadata.outputDescription.getPacket())
+  dataWriter.putUInt8(metadata.profileId);
   dataWriter.putBuffer(filterPacket);
-  meta.filterCRC = Util.crc16_ccitt(dataWriter.getBuffer());
+  return Util.crc16_ccitt(dataWriter.getBuffer());
+}
 
-  return meta;
+
+/**
+ * Get the CRC for this filter based on the metaData and the filterPacket.
+ * @param metadata
+ * @param filterPacket
+ */
+export function getMasterCRC(filters: Record<filterId, filterCRC>) : number {
+  // Get filterCRC
+  let ids = Object.keys(filters);
+  ids.sort((a,b) => { return Number(a) - Number(b)});
+
+  let writer = new DataWriter(ids.length*2);
+  for (let id of ids) {
+    writer.putUInt16(filters[id])
+  }
+
+  return Util.crc16_ccitt(writer.getBuffer())
+}
+
+export class FilterUploadChunk {
+  filterId: number;
+  chunkStartIndex: number;
+  totalSize: number;
+  chunkSize: number;
+  chunk: Buffer;
+
+  constructor(filterId: number, chunkStartIndex: number, totalSize: number, chunkSize: number, chunk: Buffer) {
+    this.filterId = filterId;
+    this.chunkStartIndex = chunkStartIndex;
+    this.totalSize = totalSize;
+    this.chunkSize = chunkSize;
+    this.chunk = chunk;
+  }
+
+  getPacket() {
+    let writer = new DataWriter(7);
+    writer.putUInt8(this.filterId);
+    writer.putUInt16(this.chunkStartIndex);
+    writer.putUInt16(this.totalSize);
+    writer.putUInt16(this.chunkSize);
+    writer.putBuffer(this.chunk);
+    return writer.getBuffer();
+  }
+}
+
+export class FilterChunker {
+  filterId: number
+  filterData: Buffer;
+
+  index = 0;
+  maxChunkSize = 256;
+
+
+
+  constructor(filterId: number, filterData: Buffer) {
+    this.filterId = filterId;
+    this.filterData = filterData;
+  }
+
+  getChunk() : { finished: boolean, packet: Buffer } {
+    let totalSize = this.filterData.length;
+    if (totalSize > this.maxChunkSize) {
+      // CHUNK
+      let chunkSize = Math.min(this.maxChunkSize, totalSize - this.index*this.maxChunkSize);
+      let chunk = Buffer.from(this.filterData,this.index*this.maxChunkSize, chunkSize);
+      let result = {finished: false, packet: new FilterUploadChunk(this.filterId, this.index, totalSize, chunkSize, chunk).getPacket()};
+      this.index++;
+      return result;
+    }
+    else {
+      return {finished: true, packet: new FilterUploadChunk(this.filterId, this.index, totalSize, totalSize, this.filterData).getPacket()};
+    }
+  }
+}
+
+
+const FILTER_SUMMARY_SIZE = 4;
+
+export class FilterSummaries {
+  supportedFilterProtocol: number;
+  masterVersion: number;
+  masterCRC: number;
+  freeSpaceLeft: number
+
+  filterSummaries: FilterSummary[]
+  constructor(data: Buffer) {
+    let stepper = new DataStepper(data);
+
+    this.supportedFilterProtocol = stepper.getUInt8();
+    this.masterVersion = stepper.getUInt16();
+    this.masterCRC     = stepper.getUInt16();
+    this.freeSpaceLeft = stepper.getUInt16();
+
+    let amountOfFilters = stepper.getRemainingByteCount() / FILTER_SUMMARY_SIZE;
+    let summaries = stepper.getRemainingBuffer()
+
+    for (let i = 0; i < amountOfFilters; i++) {
+      let summary = Buffer.from(summaries, i * FILTER_SUMMARY_SIZE, FILTER_SUMMARY_SIZE);
+      this.filterSummaries.push(new FilterSummary(summary));
+    }
+
+  }
+}
+
+export class FilterSummary {
+  filterId: number;
+  filterType: number;
+  filterCRC: number;
+
+  constructor(data) {
+    let stepper = new DataStepper(data);
+    this.filterId   = stepper.getUInt8()
+    this.filterType = stepper.getUInt8()
+    this.filterCRC  = stepper.getUInt16()
+  }
 }
 

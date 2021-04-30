@@ -19,14 +19,29 @@ export class DataStepper {
     return source.readUInt8(0);
   }
 
+  getInt8() {
+    let source = this._request(1);
+    return source.readInt8(0);
+  }
+
   getUInt16() {
     let source = this._request(2);
     return source.readUInt16LE(0);
   }
 
+  getInt16() {
+    let source = this._request(2);
+    return source.readInt16LE(0);
+  }
+
   getUInt32() {
     let source = this._request(4);
     return source.readUInt32LE(0);
+  }
+
+  getInt32() {
+    let source = this._request(4);
+    return source.readInt32LE(0);
   }
 
   skip(count = 1) {
@@ -43,8 +58,12 @@ export class DataStepper {
   }
 
   getRemainingBuffer() {
-    let size = this.length - this.position;
+    let size = this.getRemainingByteCount();
     return this._request(size);
+  }
+
+  getRemainingByteCount(): number {
+    return this.length - this.position;
   }
 
   _request(size: number) : Buffer {

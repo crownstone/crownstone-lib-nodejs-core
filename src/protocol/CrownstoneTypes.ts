@@ -43,6 +43,10 @@ export const ControlType = {
   GET_RAM_STATISTICS           : 88,
   UPLOAD_MICROAPP              : 90,
   CLEAN_FLASH                  : 100,
+  UPLOAD_FILTER                : 110,
+  REMOVE_FILTER                : 111,
+  COMMIT_FILTER_CHANGES        : 112,
+  GET_FILTER_SUMMARIES         : 113,
 
   UNSPECIFIED                  : 65535
 };
@@ -136,25 +140,39 @@ export const DeviceType = {
 };
 
 export const ResultValue = {
-  SUCCESS               : 0,     // Completed successfully.
-  WAIT_FOR_SUCCESS      : 1,     // Command is successful so far, but you need to wait for SUCCESS.
+  SUCCESS               : 0,      // Completed successfully.
+  WAIT_FOR_SUCCESS      : 1,      // Command is successful so far, but you need to wait for SUCCESS.
+  SUCCESS_NO_CHANGE     : 2,      // Command is successful, but nothing changed.
   BUFFER_UNASSIGNED     : 16,     // No buffer was assigned for the command.
   BUFFER_LOCKED         : 17,     // Buffer is locked, failed queue command.
-  BUFFER_TO_SMALL       : 18,
+  BUFFER_TO_SMALL       : 18,     // Buffer is too small for operation.
+  NOT_ALIGNED           : 19,     // NOT_ALIGNED	Buffer is not aligned.
   WRONG_PAYLOAD_LENGTH  : 32,     // Wrong payload length provided.
   WRONG_PARAMETER       : 33,     // Wrong parameter provided.
   INVALID_MESSAGE       : 34,     // invalid message provided.
   UNKNOWN_OP_CODE       : 35,     // Unknown operation code provided.
   UNKNOWN_TYPE          : 36,     // Unknown type provided.
   NOT_FOUND             : 37,     // The thing you were looking for was not found.
-  NO_SPACE              : 38,
-  BUSY                  : 39,
-  NO_ACCESS             : 48,     // Invalid access for this command.
+  NO_SPACE              : 38,     // NO_SPACE	There is no space for this command.
+  BUSY                  : 39,     // BUSY	Wait for something to be done. You can usually retry later.
+  WRONG_STATE           : 40,     // WRONG_STATE	The crownstone is in a wrong state.
+  ALREADY_EXISTS        : 41,     // ALREADY_EXISTS	Item already exists.
+  TIMEOUT               : 42,     // TIMEOUT	Operation timed out.
+  CANCELED              : 43,     // CANCELED	Operation was canceled.
+  PROTOCOL_UNSUPPORTED  : 44,     // PROTOCOL_UNSUPPORTED	The protocol is not supported.
+  MISMATCH              : 45,     // MISMATCH	There is a mismatch, usually in CRC/checksum/hash.
+  NO_ACCESS             : 48,     // NO_ACCESS	Invalid access for this command.
+  UNSAFE                : 49,     // UNSAFE	It's unsafe to execute this command.
   NOT_AVAILABLE         : 64,     // Command currently not available.
   NOT_IMPLEMENTED       : 65,     // Command not implemented (not yet or not anymore).
+  NOT_INITIALIZED       : 67,     // NOT_INITIALIZED	Something must first be initialized.
+  NOT_STARTED           : 68,     // NOT_STARTED	Something must first be started.
+  NOT_POWERED           : 69,     // NOT_POWERED
   WRITE_DISABLED        : 80,     // Write is disabled for given type.
-  ERR_WRITE_NOT_ALLOWED : 81,     // Direct write is not allowed for this type, use command instead.
+  WRITE_NOT_ALLOWED     : 81,     // Direct write is not allowed for this type, use command instead.
+  READ_FAILED           : 82,     // Direct write is not allowed for this type, use command instead.
   ADC_INVALID_CHANNEL   : 96,     // Invalid adc input channel selected.
+  EVENT_UNHANDLED       : 112,    // Invalid adc input channel selected.
 };
 
 export let ResultValueInv = {}

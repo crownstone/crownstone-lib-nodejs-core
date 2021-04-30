@@ -52,3 +52,7 @@ interface CuckooExtendedFingerprint {
   bucketA: number,
   bucketB: number
 }
+
+type filterId  = number;
+type filterCRC = number;
+

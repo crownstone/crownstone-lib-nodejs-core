@@ -1,34 +1,34 @@
 import {ControlType} from './CrownstoneTypes';
-import {ControlPacket, FactoryResetPacket} from "./BasePackets";
+import {AssetFilterCommand, ControlPacket, FactoryResetPacket} from "./BasePackets";
 import {Util} from "../util/Util";
 import {DataWriter} from "../util/DataWriter";
 
 export class ControlPacketsGenerator {
 
-  static getFactoryResetPacket() {
+  static getFactoryResetPacket() : Buffer {
     let buffer = Buffer.alloc(4);
     buffer.writeUInt32LE(0xdeadbeef,0);
     return buffer
   }
 
-  static getCommandFactoryResetPacket() {
+  static getCommandFactoryResetPacket() : Buffer {
     return new FactoryResetPacket().getPacket()
   }
 
-  static getSwitchStatePacket(switchState: number) {
+  static getSwitchStatePacket(switchState: number) : Buffer {
     let convertedSwitchState = Util.bound0_100(switchState);
     return new ControlPacket(ControlType.SWITCH).loadUInt8(convertedSwitchState).getPacket()
   }
 
-  static getResetPacket() {
+  static getResetPacket() : Buffer {
     return new ControlPacket(ControlType.RESET).getPacket()
   }
 
-  static getPutInDFUPacket() {
+  static getPutInDFUPacket() : Buffer {
     return new ControlPacket(ControlType.GOTO_DFU).getPacket()
   }
 
-  static getDisconnectPacket() {
+  static getDisconnectPacket()  : Buffer {
     return new ControlPacket(ControlType.DISCONNECT).getPacket()
   }
 
@@ -36,7 +36,7 @@ export class ControlPacketsGenerator {
    * @param state : 0 or 1
    * @returns {Buffer}
    */
-  static getRelaySwitchPacket(state) {
+  static getRelaySwitchPacket(state) : Buffer {
     return new ControlPacket(ControlType.RELAY).loadUInt8(state).getPacket()
   }
 
@@ -44,14 +44,14 @@ export class ControlPacketsGenerator {
    * @param switchState   [0 .. 1]
    * @returns {Buffer}
    */
-  static getPwmSwitchPacket(switchState) {
+  static getPwmSwitchPacket(switchState) : Buffer {
     let convertedSwitchState = Util.bound0_100(switchState);
 
     return new ControlPacket(ControlType.PWM).loadUInt8(convertedSwitchState).getPacket()
   }
 
 
-  static getResetErrorPacket(errorMask) {
+  static getResetErrorPacket(errorMask) : Buffer {
     return new ControlPacket(ControlType.RESET_ERRORS).loadUInt32(errorMask).getPacket()
   }
 
@@ -63,11 +63,11 @@ export class ControlPacketsGenerator {
    * @param time
    * @returns {Buffer}
    */
-  static getSetTimePacket(time) {
+  static getSetTimePacket(time) : Buffer {
     return new ControlPacket(ControlType.SET_TIME).loadUInt32(time).getPacket()
   }
 
-  static getAllowDimmingPacket(allow) {
+  static getAllowDimmingPacket(allow) : Buffer {
     let allowByte = 0;
     if (allow) {
       allowByte = 1
@@ -76,7 +76,7 @@ export class ControlPacketsGenerator {
     return new ControlPacket(ControlType.ALLOW_DIMMING).loadUInt8(allowByte).getPacket()
   }
 
-  static getLockSwitchPacket(lock) {
+  static getLockSwitchPacket(lock) : Buffer {
     let lockByte = 0;
     if (lock) {
       lockByte = 1
@@ -93,7 +93,7 @@ export class ControlPacketsGenerator {
     tapToToggleEnabled:boolean,
     deviceToken:number,
     ttlMinutes:number
-  ) {
+  ) : Buffer {
     let data = new DataWriter(11);
     data.putUInt16(trackingNumber);
     data.putUInt8(locationUID);
@@ -116,7 +116,7 @@ export class ControlPacketsGenerator {
   }
 
 
-  static getSetupPacket(type, crownstoneId, adminKey : Buffer, memberKey : Buffer, guestKey : Buffer, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) {
+  static getSetupPacket(type, crownstoneId, adminKey : Buffer, memberKey : Buffer, guestKey : Buffer, meshAccessAddress, ibeaconUUID, ibeaconMajor, ibeaconMinor) : Buffer {
     let prefix = Buffer.alloc(2);
     prefix.writeUInt8(type,         0);
     prefix.writeUInt8(crownstoneId, 1);
@@ -133,7 +133,7 @@ export class ControlPacketsGenerator {
 
     let data = Buffer.concat([prefix, adminKey, memberKey, guestKey, meshBuffer, uuidBuffer, ibeaconBuffer]);
 
-    return new ControlPacket(ControlType.SETUP).loadByteArray(data).getPacket()
+    return new ControlPacket(ControlType.SETUP).loadBuffer(data).getPacket()
   }
 
   static getSetupPacketV2(
@@ -150,7 +150,7 @@ export class ControlPacketsGenerator {
     ibeaconUUID,
     ibeaconMajor,
     ibeaconMinor
-  ) {
+  ) : Buffer {
     let prefix = Buffer.alloc(2);
     prefix.writeUInt8(crownstoneId, 0);
     prefix.writeUInt8(sphereUid,    1);
@@ -163,6 +163,32 @@ export class ControlPacketsGenerator {
 
     let data = Buffer.concat([prefix, adminKey, memberKey, basicKey, serviceDataKey, localizationKey, meshDeviceKey, meshAppKey, meshNetworkKey, uuidBuffer, ibeaconBuffer]);
 
-    return new ControlPacket(ControlType.SETUP).loadByteArray(data).getPacket()
+    return new ControlPacket(ControlType.SETUP).loadBuffer(data).getPacket()
+  }
+
+
+  static getRemoveFilterPacket(filterId: number) : Buffer {
+    let assetCommand = new AssetFilterCommand().loadUInt8(filterId);
+    return new ControlPacket(ControlType.REMOVE_FILTER).loadBuffer(assetCommand.getPacket()).getPacket()
+  }
+
+
+  static getGetFilterSummariesPacket() : Buffer {
+    return new ControlPacket(ControlType.GET_FILTER_SUMMARIES).getPacket()
+  }
+
+
+  static getCommitFilterChangesPacket(masterVersion: number, masterCRC: number) : Buffer {
+    let writer = new DataWriter(4);
+    writer.putUInt16(masterVersion);
+    writer.putUInt16(masterCRC)
+    let assetCommand = new AssetFilterCommand().loadBuffer(writer.getBuffer());
+    return new ControlPacket(ControlType.COMMIT_FILTER_CHANGES).loadBuffer(assetCommand.getPacket()).getPacket()
+  }
+
+
+  static getUploadFilterPacket(chunk: Buffer) : Buffer {
+    let assetCommand = new AssetFilterCommand().loadBuffer(chunk);
+    return new ControlPacket(ControlType.UPLOAD_FILTER).loadBuffer(assetCommand.getPacket()).getPacket()
   }
 }

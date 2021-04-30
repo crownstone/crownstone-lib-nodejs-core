@@ -263,3 +263,4 @@ export class CuckooFilter extends CuckooFilterCore {
     super(params.bucketCountLog2, params.nestPerBucket);
   }
 }
+

@@ -1,7 +1,9 @@
 import {ControlType} from "./CrownstoneTypes";
 import {GetPesistenceMode, SetPesistenceMode} from "../declarations/enums";
+import {DataWriter} from "../util/DataWriter";
 
-const SUPPORTED_PROTOCOL_VERSION = 5
+export const SUPPORTED_PROTOCOL_VERSION = 5
+export const FILTER_PROTOCOL = 0;
 
 export class BasePacket {
   type = 0;
@@ -12,7 +14,7 @@ export class BasePacket {
     this.type = packetType
   }
 
-  loadKey(keyString) {
+  loadKey(keyString: string) {
     if (keyString.length === 16) {
       this.payloadBuffer = Buffer.from(keyString, 'ascii')
     }
@@ -23,41 +25,41 @@ export class BasePacket {
     return this._process()
   }
 
-  loadString(string) {
+  loadString(string: string) {
     this.payloadBuffer = Buffer.from(string, 'ascii');
     return this._process()
   }
 
-  loadInt8(int8) {
+  loadInt8(int8 : number) {
     this.payloadBuffer = Buffer.alloc(1);
     this.payloadBuffer.writeInt8(int8);
     return this._process()
   }
 
-  loadUInt8(uint8) {
+  loadUInt8(uint8 : number) {
     this.payloadBuffer = Buffer.alloc(1);
     this.payloadBuffer.writeUInt8(uint8);
     return this._process()
   }
 
-  loadUInt16(uint16) {
+  loadUInt16(uint16 : number) {
     this.payloadBuffer = Buffer.alloc(2);
     this.payloadBuffer.writeUInt16LE(uint16);
     return this._process()
   }
 
-  loadUInt32(uint32) {
+  loadUInt32(uint32 : number) {
     this.payloadBuffer = Buffer.alloc(4);
     this.payloadBuffer.writeUInt32LE(uint32);
     return this._process()
   }
 
-  loadByteArray(byteArray) {
+  loadByteArray(byteArray : number[]) {
     this.payloadBuffer = Buffer.from(byteArray);
     return this._process()
   }
 
-  loadBuffer(buffer) {
+  loadBuffer(buffer: Buffer) {
     this.payloadBuffer = buffer;
     return this._process()
   }
@@ -176,3 +178,20 @@ export class ControlStateSetPacket extends BasePacket {
   }
 }
 
+
+
+export class AssetFilterCommand extends BasePacket {
+  filterCommandProtocol: number = FILTER_PROTOCOL
+
+  constructor() {
+    super(null);
+    this.payloadBuffer = Buffer.alloc(0)
+  }
+
+  getPacket() : Buffer {
+    let writer = new DataWriter(1);
+    writer.putUInt8(this.filterCommandProtocol);
+    writer.putBuffer(this.payloadBuffer);
+    return writer.getBuffer();
+  }
+}

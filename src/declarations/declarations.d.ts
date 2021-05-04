@@ -1,3 +1,4 @@
+
 interface keyMap {
   adminKey        : string,
   memberKey       : string,
@@ -55,4 +56,3 @@ interface CuckooExtendedFingerprint {
 
 type filterId  = number;
 type filterCRC = number;
-

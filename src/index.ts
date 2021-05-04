@@ -15,7 +15,7 @@ import {CrownstoneErrors, } from "./packets/CrownstoneErrors"
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6, } from "./packets/Parsers"
 import {ResultPacket, } from "./packets/ResultPacket"
 import {ServiceData, } from "./packets/ServiceData"
-import {FilterType, FilterInputType, FilterOutputDescriptionType, FilterMetaData, FilterFormatMacAddress, FilterFormatAdData, FilterFormatMaskedAdData, FilterOutputDescription, CuckooFilterPacketData, CuckooExtendedFingerprintData, getFilterCRC, getMasterCRC, FilterUploadChunk, FilterChunker, FilterSummaries, FilterSummary, } from "./packets/filter/FilterPackets"
+import {FilterType, FilterInputType, FilterOutputDescriptionType, FilterMetaData, FilterFormatMacAddress, FilterFormatAdData, FilterFormatMaskedAdData, FilterOutputDescription, CuckooFilterPacketData, CuckooExtendedFingerprintData, FilterUploadChunk, FilterChunker, FilterSummaries, FilterSummary, } from "./packets/filter/FilterPackets"
 import {SUPPORTED_PROTOCOL_VERSION, FILTER_PROTOCOL, BasePacket, ControlPacket, FactoryResetPacket, ControlStateGetPacket, ControlStateSetPacket, AssetFilterCommand, } from "./protocol/BasePackets"
 import {DeviceCharacteristics, CrownstoneCharacteristics, SetupCharacteristics, DFUCharacteristics, } from "./protocol/Characteristics"
 import {ControlPacketsGenerator, } from "./protocol/ControlPackets"
@@ -27,6 +27,8 @@ import {DataStepper, } from "./util/DataStepper"
 import {DataWriter, } from "./util/DataWriter"
 import {EncryptionHandler, EncryptedPackageBase, EncryptedPackage, } from "./util/EncryptionHandler"
 import {EventBusClass, } from "./util/EventBus"
+import {FilterSyncer, } from "./util/FilterSyncer"
+import {getMasterCRC, getFilterCRC, } from "./util/FilterUtil"
 import {NotificationMerger, } from "./util/NotificationMerger"
 import {PublicUtil, } from "./util/PublicUtil"
 import {reconstructTimestamp, } from "./util/Timestamp"
@@ -82,6 +84,7 @@ export {
   FilterOutputDescriptionType,
   FilterSummaries,
   FilterSummary,
+  FilterSyncer,
   FilterType,
   FilterUploadChunk,
   GetPesistenceMode,

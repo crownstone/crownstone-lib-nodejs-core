@@ -14,5 +14,5 @@
     "src/",
     "node_modules/crownstone-logger/src/declarations/logger_types.d.ts"
   ],
-  "lib": ["es2015"]
+  "lib": ["es2020"]
 }

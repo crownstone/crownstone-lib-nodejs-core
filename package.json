@@ -42,7 +42,7 @@
     "collectCoverageFrom": []
   },
   "engines": {
-    "node": ">=10.4"
+    "node": ">=10.4.0"
   },
   "license": "MIT"
 }

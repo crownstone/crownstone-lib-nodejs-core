@@ -1,4 +1,5 @@
-import {CuckooFilterPacketData, FilterMetaData, FilterSummaries, FilterSummary} from "../packets/filter/FilterPackets";
+import {FilterSummaries, FilterSummary} from "../packets/filter/FilterPackets";
+import {FilterMetaData} from "../packets/filter/FilterMetaDataPackets";
 
 
 export interface FilterData {

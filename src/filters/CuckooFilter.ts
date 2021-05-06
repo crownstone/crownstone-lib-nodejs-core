@@ -1,6 +1,6 @@
 import {Util} from "../util/Util";
 import {RandomGeneratorMSWS} from "./randomGenerator";
-import {CuckooFilterPacketData} from "../packets/filter/FilterPackets";
+import {CuckooFilterPacketData} from "../packets/filter/CuckooFilterPackets";
 
 export class ExtendedFingerprint implements CuckooExtendedFingerprint{
   fingerprint : number;

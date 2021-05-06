@@ -1,6 +1,7 @@
 import {DataWriter} from "./DataWriter";
 import {Util} from "./Util";
-import {FilterMetaData} from "../packets/filter/FilterPackets";
+import {FilterUploadChunk} from "../packets/filter/FilterPackets";
+import {FilterMetaData} from "../packets/filter/FilterMetaDataPackets";
 
 /**
  * Get the CRC for this filter based on the metaData and the filterPacket.
@@ -38,3 +39,40 @@ export function getFilterCRC(metadata: FilterMetaData, filterPacket: Buffer) : n
 }
 
 
+
+export class FilterChunker {
+  filterId: number
+  filterData: Buffer;
+
+  index = 0;
+  maxChunkSize = 256;
+
+  constructor(filterId: number, filterData: Buffer) {
+    this.filterId = filterId;
+    this.filterData = filterData;
+  }
+
+  getChunk() : { finished: boolean, packet: Buffer } {
+    let totalSize = this.filterData.length;
+    if (totalSize > this.maxChunkSize) {
+      // CHUNK
+      let chunkSize = Math.min(this.maxChunkSize, totalSize - this.index*this.maxChunkSize);
+      let chunk = Buffer.from(this.filterData,this.index*this.maxChunkSize, chunkSize);
+      let result = {finished: false, packet: new FilterUploadChunk(this.filterId, this.index, totalSize, chunkSize, chunk).getPacket()};
+      this.index++;
+      return result;
+    }
+    else {
+      return {finished: true, packet: new FilterUploadChunk(this.filterId, this.index, totalSize, totalSize, this.filterData).getPacket()};
+    }
+  }
+
+  getAmountOfChunks() : number {
+    let totalSize = this.filterData.length;
+    let count = Math.floor(totalSize/this.maxChunkSize);
+    if (totalSize % this.maxChunkSize > 0) {
+      count += 1;
+    }
+    return count;
+  }
+}

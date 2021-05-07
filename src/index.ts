@@ -11,6 +11,10 @@ import {parseOpCode3_type2, } from "./packets/AdvertisementTypes/OpCode3/opCode3
 import {parseOpCode3_type3, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type3"
 import {parseOpCode4_type0, } from "./packets/AdvertisementTypes/OpCode4/opCode4_type0"
 import {parseOpCode7_type4, } from "./packets/AdvertisementTypes/OpCode7/opCode7_type4"
+import {CuckooFilterPacketData, CuckooExtendedFingerprintData, } from "./packets/AssetFilters/CuckooFilterPackets"
+import {FilterMetaData, FilterFormatMacAddress, FilterFormatAdData, FilterFormatMaskedAdData, FilterOutputDescription, } from "./packets/AssetFilters/FilterMetaDataPackets"
+import {FilterUploadChunk, FilterSummaries, FilterSummary, } from "./packets/AssetFilters/FilterPackets"
+import {FilterType, FilterInputType, FilterOutputDescriptionType, } from "./packets/AssetFilters/FilterTypes"
 import {CrownstoneErrors, } from "./packets/CrownstoneErrors"
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6, } from "./packets/Parsers"
 import {ResultPacket, } from "./packets/ResultPacket"
@@ -55,8 +59,10 @@ export {
   CrownstoneErrorType,
   CrownstoneErrors,
   CrownstoneSettings,
+  CuckooExtendedFingerprintData,
   CuckooFilter,
   CuckooFilterCore,
+  CuckooFilterPacketData,
   DFUCharacteristics,
   DFUServices,
   DFU_ADVERTISEMENT_SERVICE_UUID,
@@ -72,7 +78,18 @@ export {
   FILTER_PROTOCOL,
   FactoryResetPacket,
   FilterChunker,
+  FilterFormatAdData,
+  FilterFormatMacAddress,
+  FilterFormatMaskedAdData,
+  FilterInputType,
+  FilterMetaData,
+  FilterOutputDescription,
+  FilterOutputDescriptionType,
+  FilterSummaries,
+  FilterSummary,
   FilterSyncer,
+  FilterType,
+  FilterUploadChunk,
   GetPesistenceMode,
   Logger,
   MeshMultiSwitchPacket,

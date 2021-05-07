@@ -1,7 +1,7 @@
 import {DataWriter} from "./DataWriter";
 import {Util} from "./Util";
-import {FilterUploadChunk} from "../packets/filter/FilterPackets";
-import {FilterMetaData} from "../packets/filter/FilterMetaDataPackets";
+import {FilterUploadChunk} from "../packets/AssetFilters/FilterPackets";
+import {FilterMetaData} from "../packets/AssetFilters/FilterMetaDataPackets";
 
 /**
  * Get the CRC for this filter based on the metaData and the filterPacket.

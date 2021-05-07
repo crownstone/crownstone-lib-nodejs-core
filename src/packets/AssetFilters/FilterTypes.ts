@@ -13,4 +13,3 @@ export const FilterOutputDescriptionType = {
   MAC_ADDRESS_REPORT:   0,
   SHORT_ASSET_ID_TRACK: 1,
 }
-

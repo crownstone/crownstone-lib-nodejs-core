@@ -15,10 +15,6 @@ import {CrownstoneErrors, } from "./packets/CrownstoneErrors"
 import {parseOpCode3, parseOpCode4, parseOpCode5, parseOpCode6, } from "./packets/Parsers"
 import {ResultPacket, } from "./packets/ResultPacket"
 import {ServiceData, } from "./packets/ServiceData"
-import {CuckooFilterPacketData, CuckooExtendedFingerprintData, } from "./packets/filter/CuckooFilterPackets"
-import {FilterMetaData, FilterFormatMacAddress, FilterFormatAdData, FilterFormatMaskedAdData, FilterOutputDescription, } from "./packets/filter/FilterMetaDataPackets"
-import {FilterUploadChunk, FilterSummaries, FilterSummary, } from "./packets/filter/FilterPackets"
-import {FilterType, FilterInputType, FilterOutputDescriptionType, } from "./packets/filter/FilterTypes"
 import {SUPPORTED_PROTOCOL_VERSION, FILTER_PROTOCOL, BasePacket, ControlPacket, FactoryResetPacket, ControlStateGetPacket, ControlStateSetPacket, AssetFilterCommand, } from "./protocol/BasePackets"
 import {DeviceCharacteristics, CrownstoneCharacteristics, SetupCharacteristics, DFUCharacteristics, } from "./protocol/Characteristics"
 import {ControlPacketsGenerator, } from "./protocol/ControlPackets"
@@ -59,10 +55,8 @@ export {
   CrownstoneErrorType,
   CrownstoneErrors,
   CrownstoneSettings,
-  CuckooExtendedFingerprintData,
   CuckooFilter,
   CuckooFilterCore,
-  CuckooFilterPacketData,
   DFUCharacteristics,
   DFUServices,
   DFU_ADVERTISEMENT_SERVICE_UUID,
@@ -78,18 +72,7 @@ export {
   FILTER_PROTOCOL,
   FactoryResetPacket,
   FilterChunker,
-  FilterFormatAdData,
-  FilterFormatMacAddress,
-  FilterFormatMaskedAdData,
-  FilterInputType,
-  FilterMetaData,
-  FilterOutputDescription,
-  FilterOutputDescriptionType,
-  FilterSummaries,
-  FilterSummary,
   FilterSyncer,
-  FilterType,
-  FilterUploadChunk,
   GetPesistenceMode,
   Logger,
   MeshMultiSwitchPacket,

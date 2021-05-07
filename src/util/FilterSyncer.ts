@@ -1,5 +1,5 @@
-import {FilterSummaries, FilterSummary} from "../packets/filter/FilterPackets";
-import {FilterMetaData} from "../packets/filter/FilterMetaDataPackets";
+import {FilterSummaries, FilterSummary} from "../packets/AssetFilters/FilterPackets";
+import {FilterMetaData} from "../packets/AssetFilters/FilterMetaDataPackets";
 
 
 export interface FilterData {

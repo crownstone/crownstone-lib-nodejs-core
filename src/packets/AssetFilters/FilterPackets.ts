@@ -36,9 +36,9 @@ export class FilterSummaries {
   supportedFilterProtocol: number;
   masterVersion: number;
   masterCRC: number;
-  freeSpaceLeft: number
+  freeSpaceLeft: number;
 
-  filterSummaries: FilterSummary[]
+  filterSummaries: FilterSummary[] = [];
   constructor(data: Buffer) {
     let stepper = new DataStepper(data);
 

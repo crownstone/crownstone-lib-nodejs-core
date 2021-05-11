@@ -20,4 +20,5 @@ test("Check lollipop", async () => {
   expect(Util.isHigherLollipop(200, 3201, 100, 6100)).toBeTruthy();
   expect(Util.isHigherLollipop(200, 300, 100, 6100)).toBeFalsy();
   expect(Util.isHigherLollipop(50, 3300, 100, 6100)).toBeFalsy();
+
 })

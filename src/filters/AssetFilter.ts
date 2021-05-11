@@ -1,8 +1,7 @@
-import {FilterInputType, FilterType} from "../packets/AssetFilters/FilterTypes";
 import {FilterMetaData} from "../packets/AssetFilters/FilterMetaDataPackets";
+import {FilterInputType, FilterType} from "../packets/AssetFilters/FilterTypes";
 import {CuckooFilter} from "./filterModules/CuckooFilter";
 import {getFilterCRC} from "../util/FilterUtil";
-
 
 export class AssetFilter {
 

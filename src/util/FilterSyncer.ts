@@ -62,7 +62,8 @@ export class FilterSyncer {
         filtersToDelete.push(filterSummary.filterId);
       }
       else if (filterSummary.filterCRC !== matchingFilter.crc) {
-        filtersToDelete.push(filterSummary.filterId);
+        // this implies that we first have to delete a filter beofre we can set a new one. If that is the case,
+        // the setting of the new filter will automatically override the previous one.
       }
       else {
         // if the ID and the CRC match, we're done with this one. Next!
@@ -72,18 +73,16 @@ export class FilterSyncer {
 
     // check which filters from the set want to be on the Crownstone have to be uploaded.
     for (let filterData of this.data.filters) {
-      if (filtersToDelete.indexOf(filterData.idOnCrownstone) !== -1) {
-        // the filter with this id will be removed. Add it after.
-        filtersToAdd.push(filterData);
-        continue;
-      }
-
       let matchingFilter = searchForIdInCrownstoneData(filterData.idOnCrownstone, summaries.filterSummaries);
       if (matchingFilter === null) {
         filtersToAdd.push(filterData);
         continue;
       }
-      // the case where the CRC does not match is already covered by the first check if it's bound to be deleted.
+
+      if (matchingFilter.filterCRC === filterData.crc) {
+        filtersToAdd.push(filterData);
+        continue;
+      }
     }
 
     for (let filterId of filtersToDelete) {

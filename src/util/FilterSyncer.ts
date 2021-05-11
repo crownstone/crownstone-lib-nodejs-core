@@ -1,5 +1,6 @@
 import {FilterSummaries, FilterSummary} from "../packets/AssetFilters/FilterPackets";
 import {FilterMetaData} from "../packets/AssetFilters/FilterMetaDataPackets";
+import {Util} from "./Util";
 
 
 export interface FilterData {
@@ -36,7 +37,8 @@ export class FilterSyncer {
   async syncToCrownstone() {
     let summaries = await this.com.getSummaries();
     let protocol = summaries.supportedFilterProtocol;
-    if (summaries.masterVersion > this.data.masterVersion) {
+    if (Util.isHigherLollipop(summaries.masterVersion, this.data.masterVersion, 1, (1<<16)-1)) {
+      // MAKE LOLLIPOP
       throw "TARGET_HAS_HIGHER_VERSION";
     }
 
@@ -112,3 +114,4 @@ function searchForIdInTargetData(id: number, filters: FilterData[]) : FilterData
   }
   return null;
 }
+

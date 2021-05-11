@@ -1,4 +1,4 @@
-import {CuckooFilter} from "../../src/filters/cuckooFilter";
+import {CuckooFilterCore} from "../../src/filters/filterModules/cuckooFilter";
 import * as fs from "fs";
 import path from "path";
 
@@ -21,7 +21,7 @@ test("CuckooFilter Cross platform test", async () => {
     let items = line.split(",");
 
     if (items[0] === "cuckoofilter") {
-      filter = new CuckooFilter(Number(items[1]), Number(items[2]));
+      filter = new CuckooFilterCore(Number(items[1]), Number(items[2]));
       continue;
     }
     if (items[0] !== 'add') {

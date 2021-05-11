@@ -2,8 +2,9 @@
 import {Logger, } from "./Logger"
 import {CrownstoneSettings, } from "./containers/CrownstoneSettings"
 import {UserLevel, CrownstoneErrorType, GetPesistenceMode, SetPesistenceMode, } from "./declarations/enums"
-import {ExtendedFingerprint, generateCuckooFilterParameters, CuckooFilterCore, CuckooFilter, } from "./filters/CuckooFilter"
-import {RandomGeneratorMSWS, } from "./filters/randomGenerator"
+import {AssetFilter, } from "./filters/AssetFilter"
+import {RandomGeneratorMSWS, } from "./filters/RandomGenerator"
+import {ExtendedFingerprint, generateCuckooFilterParameters, CuckooFilterCore, CuckooFilter, } from "./filters/filterModules/CuckooFilter"
 import {Advertisement, } from "./packets/Advertisement"
 import {parseOpCode3_type0, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type0"
 import {parseOpCode3_type1, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type1"
@@ -41,6 +42,7 @@ import {Util, } from "./util/Util"
 
 export {
   Advertisement,
+  AssetFilter,
   AssetFilterCommand,
   BasePacket,
   BroadcastTypes,

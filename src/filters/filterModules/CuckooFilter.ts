@@ -1,6 +1,6 @@
-import {Util} from "../util/Util";
-import {RandomGeneratorMSWS} from "./randomGenerator";
-import {CuckooFilterPacketData} from "../packets/AssetFilters/CuckooFilterPackets";
+import {Util} from "../../util/Util";
+import {RandomGeneratorMSWS} from "./../RandomGenerator";
+import {CuckooFilterPacketData} from "../../packets/AssetFilters/CuckooFilterPackets";
 
 export class ExtendedFingerprint implements CuckooExtendedFingerprint{
   fingerprint : number;
@@ -63,7 +63,6 @@ export class CuckooFilterCore {
   hash(data: Buffer | number[]) {
     return Util.crc16_ccitt(data)
   }
-
 
   add(key: number[] | Buffer) : boolean {
     return this.addExtendedFingerprint(this.getExtendedFingerprint(key))

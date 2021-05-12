@@ -1,26 +1,12 @@
 import {FilterSummaries, FilterSummary} from "../packets/AssetFilters/FilterPackets";
-import {FilterMetaData} from "../packets/AssetFilters/FilterMetaDataPackets";
-import {Util} from "./Util";
+import {LollipopUint16} from "./Lollipop";
 
-
-export interface FilterData {
-  idOnCrownstone: number,
-  crc:            number,
-  metaData:       FilterMetaData,
-  filter:         Buffer
-}
 
 export interface FilterSycingCommunicationInterface {
   getSummaries: () => Promise<FilterSummaries>,
   remove: (protocol: number, filterId: number) => Promise<void>,
   upload: (protocol: number, filterData: FilterData) => Promise<void>,
   commit: (protocol: number) => Promise<void>,
-}
-
-export interface FilterSyncingTargetData {
-  masterVersion: number,
-  masterCRC:     number,
-  filters:       FilterData[]
 }
 
 
@@ -37,8 +23,7 @@ export class FilterSyncer {
   async syncToCrownstone() {
     let summaries = await this.com.getSummaries();
     let protocol = summaries.supportedFilterProtocol;
-    if (Util.isHigherLollipop(summaries.masterVersion, this.data.masterVersion, 1, (1<<16)-1)) {
-      // MAKE LOLLIPOP
+    if (LollipopUint16.isHigher(summaries.masterVersion, this.data.masterVersion, 1)) {
       throw "TARGET_HAS_HIGHER_VERSION";
     }
 

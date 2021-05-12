@@ -1,7 +1,7 @@
 import {Util} from "../../src/util/Util";
 import {RandomGeneratorMSWS} from "../../src/filters/randomGenerator";
 import {CuckooFilterCore} from "../../src/filters/filterModules/CuckooFilter";
-import {generateCuckooFilterParameters} from "../../src";
+import {generateCuckooFilterParameters} from "../../src/filters/filterModules/CuckooFilter";
 
 beforeEach(async () => {})
 beforeAll( async () => {})

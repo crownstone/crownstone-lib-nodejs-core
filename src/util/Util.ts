@@ -487,38 +487,6 @@ export const Util = {
   },
 
 
-  isHigherLollipop(value, thanValue, lollipopStem, lollipopMax) : boolean {
-    let circleRange = lollipopMax - lollipopStem;
-    let half = 0.5*circleRange;
-
-    if (value === thanValue) { return false; }
-
-    // if either are below the circle, normal check
-    if (value < lollipopStem && value < thanValue) {
-      return false;
-    }
-
-    if (thanValue < lollipopStem && thanValue < value ) {
-      return true;
-    }
-
-
-    if (value < thanValue) {
-      let upside = (thanValue + half);
-      if (upside > lollipopMax) {
-        upside = upside % lollipopMax + lollipopStem;
-        if (upside > value) {
-          return true;
-        }
-        return false;
-      }
-      return false;
-    }
-    else { // value > thanValue
-      // the value is higher, check if the against value has overflown.
-      return !Util.isHigherLollipop(thanValue, value, lollipopStem, lollipopMax)
-    }
-  }
 };
 
 

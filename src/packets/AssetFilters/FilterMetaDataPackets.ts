@@ -1,5 +1,5 @@
 import {DataWriter} from "../../util/DataWriter";
-import {FilterInputType} from "./FilterTypes";
+import {FilterInputType, FilterType} from "./FilterTypes";
 
 type filterPacketFormat = FilterFormatMacAddress | FilterFormatAdData | FilterFormatMaskedAdData;
 
@@ -9,8 +9,13 @@ export class FilterMetaData {
   input:             filterPacketFormat
   outputDescription: FilterOutputDescription
 
+  constructor(profileId: number, type: number = FilterType.CUCKCOO_V1) {
+    this.profileId = profileId ?? 255;
+    this.type = type;
+  }
+
   getPacket() : Buffer {
-    let writer = new DataWriter(4);
+    let writer = new DataWriter(2);
     writer.putUInt8(this.type);
     writer.putUInt8(this.profileId);
     writer.putBuffer(this.input.getPacket());

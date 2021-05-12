@@ -32,7 +32,8 @@ import {DataWriter, } from "./util/DataWriter"
 import {EncryptionHandler, EncryptedPackageBase, EncryptedPackage, } from "./util/EncryptionHandler"
 import {EventBusClass, } from "./util/EventBus"
 import {FilterSyncer, } from "./util/FilterSyncer"
-import {getMasterCRC, getFilterCRC, FilterChunker, } from "./util/FilterUtil"
+import {increaseMasterVersion, getMasterCRC, FilterChunker, } from "./util/FilterUtil"
+import {Lollipop, LollipopUint16, } from "./util/Lollipop"
 import {NotificationMerger, } from "./util/NotificationMerger"
 import {PublicUtil, } from "./util/PublicUtil"
 import {reconstructTimestamp, } from "./util/Timestamp"
@@ -94,6 +95,8 @@ export {
   FilterUploadChunk,
   GetPesistenceMode,
   Logger,
+  Lollipop,
+  LollipopUint16,
   MeshMultiSwitchPacket,
   NotificationMerger,
   ProcessType,
@@ -112,8 +115,8 @@ export {
   UserLevel,
   Util,
   generateCuckooFilterParameters,
-  getFilterCRC,
   getMasterCRC,
+  increaseMasterVersion,
   parseOpCode3,
   parseOpCode3_type0,
   parseOpCode3_type1,

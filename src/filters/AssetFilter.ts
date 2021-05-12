@@ -1,7 +1,7 @@
 import {FilterMetaData} from "../packets/AssetFilters/FilterMetaDataPackets";
 import {FilterInputType, FilterType} from "../packets/AssetFilters/FilterTypes";
 import {CuckooFilter} from "./filterModules/CuckooFilter";
-import {getFilterCRC} from "../util/FilterUtil";
+import {Util} from "../util/Util";
 
 export class AssetFilter {
 
@@ -43,8 +43,8 @@ export class AssetFilter {
    * Get the CRC of this filter
    */
   getCRC() : number {
-    this._buildFilter();
-    return getFilterCRC(this.metaData, this.filter.getPacket());
+    let packet = this.getFilterPacket();
+    return Util.crc16_ccitt(packet);
   }
 
   _buildFilter() {

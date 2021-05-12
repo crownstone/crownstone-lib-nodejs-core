@@ -56,3 +56,15 @@ interface CuckooExtendedFingerprint {
 
 type filterId  = number;
 type filterCRC = number;
+
+interface FilterSyncingTargetData {
+  masterVersion: number,
+  masterCRC: number,
+  filters: FilterData[]
+}
+
+interface FilterData {
+  idOnCrownstone: number,
+  crc:            number,
+  filter:         Buffer
+}

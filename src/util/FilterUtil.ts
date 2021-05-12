@@ -1,7 +1,12 @@
 import {DataWriter} from "./DataWriter";
 import {Util} from "./Util";
 import {FilterUploadChunk} from "../packets/AssetFilters/FilterPackets";
-import {FilterMetaData} from "../packets/AssetFilters/FilterMetaDataPackets";
+import {LollipopUint16} from "./Lollipop";
+
+
+export function increaseMasterVersion(currentVersion: number) : number {
+  return LollipopUint16.increase(currentVersion, 1);
+}
 
 /**
  * Get the CRC for this filter based on the metaData and the filterPacket.
@@ -21,24 +26,6 @@ export function getMasterCRC(filters: Record<filterId, filterCRC>) : number {
 
   return Util.crc16_ccitt(writer.getBuffer())
 }
-
-
-/**
- * Get the CRC for this filter based on the metaData and the filterPacket.
- * @param metadata
- * @param filterPacket
- */
-export function getFilterCRC(metadata: FilterMetaData, filterPacket: Buffer) : number {
-  // Get filterCRC
-  let dataWriter = new DataWriter(2);
-  dataWriter.putUInt8(metadata.type);
-  dataWriter.putBuffer(metadata.input.getPacket())
-  dataWriter.putBuffer(metadata.outputDescription.getPacket())
-  dataWriter.putUInt8(metadata.profileId);
-  dataWriter.putBuffer(filterPacket);
-  return Util.crc16_ccitt(dataWriter.getBuffer());
-}
-
 
 
 export class FilterChunker {

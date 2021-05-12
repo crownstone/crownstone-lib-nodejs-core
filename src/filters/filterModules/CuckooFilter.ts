@@ -49,7 +49,7 @@ export class CuckooFilterCore {
 
 
   clear() {
-    this.victim = new ExtendedFingerprint(0, 0, 0)
+    this.victim = new ExtendedFingerprint(0, 0, 0);
     this.bucketArray = new Array(this.getFingerPrintCount());
     for (let i = 0; i < this.bucketArray.length; i++) {
       this.bucketArray[i] = 0;
@@ -57,15 +57,15 @@ export class CuckooFilterCore {
   }
 
   getFingerPrintCount() {
-    return this.bucketCount * this.nestPerBucket
+    return this.bucketCount * this.nestPerBucket;
   }
 
   hash(data: Buffer | number[]) {
-    return Util.crc16_ccitt(data)
+    return Util.crc16_ccitt(data);
   }
 
   add(key: number[] | Buffer) : boolean {
-    return this.addExtendedFingerprint(this.getExtendedFingerprint(key))
+    return this.addExtendedFingerprint(this.getExtendedFingerprint(key));
   }
 
   getExtendedFingerprint(key : number[] | Buffer) {
@@ -105,14 +105,14 @@ export class CuckooFilterCore {
     // search bucketA
     for (let i = 0; i < this.nestPerBucket; i++) {
       if (fingerprint.fingerprint == this.lookupFingerprint(fingerprint.bucketA, i)) {
-        return true
+        return true;
       }
     }
 
     // search bucketB
     for (let i = 0; i < this.nestPerBucket; i++) {
       if (fingerprint.fingerprint == this.lookupFingerprint(fingerprint.bucketB, i)) {
-        return true
+        return true;
       }
     }
 

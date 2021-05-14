@@ -72,14 +72,15 @@ export class CuckooFilterCore {
     let fingerprint = this.hash(key);
 
     let bytes = Buffer.alloc(2);
-        bytes.writeUInt16LE(fingerprint,0);
 
-    let hashed_fingerprint = this.hash(bytes);
+    bytes.writeUInt16LE(fingerprint,0);
+
+    let hashed_fingerprint = Util.djb2Hash(bytes);
 
     return new ExtendedFingerprint(
       fingerprint,
       hashed_fingerprint % this.bucketCount,
-      (hashed_fingerprint ^ fingerprint) % this.bucketCount)
+      (hashed_fingerprint ^ fingerprint) % this.bucketCount);
   }
 
   getExtendedFingerprintFromFingerprintAndBucket(fingerprint, bucketIndex) {

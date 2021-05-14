@@ -73,6 +73,7 @@ export class FilterSyncer {
     for (let filterId of filtersToDelete) {
       await this.com.remove(protocol, filterId);
     }
+
     for (let filterData of filtersToAdd) {
       await this.com.upload(protocol, filterData);
     }

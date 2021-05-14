@@ -173,6 +173,18 @@ export const Util = {
     return crc & 0xFFFF
   },
 
+
+  // Used implementation from here: http://www.cse.yorku.ca/~oz/hash.html
+  djb2Hash(arr8: Buffer | number[]) : number {
+    let hash = 5381;
+
+    for (let i = 0; i < arr8.length; i++) {
+      hash = (hash * 33 + arr8[i]) & 0xffff;
+    }
+    return hash;
+  },
+
+
   getDelayLabel: function(delay, fullLengthText = false) {
     if (delay < 60) {
       return Math.floor(delay) + ' seconds';
@@ -317,6 +329,8 @@ export const Util = {
       return !Util.versions.isHigherOrEqual(version, compareWithVersion);
     },
   },
+
+
 
 
   deepCopy(object) {

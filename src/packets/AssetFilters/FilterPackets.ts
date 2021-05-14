@@ -60,13 +60,11 @@ export class FilterSummaries {
 
 export class FilterSummary {
   filterId: number;
-  filterType: number;
   filterCRC: number;
 
   constructor(data) {
     let stepper = new DataStepper(data);
     this.filterId   = stepper.getUInt8()
-    this.filterType = stepper.getUInt8()
     this.filterCRC  = stepper.getUInt16()
   }
 }

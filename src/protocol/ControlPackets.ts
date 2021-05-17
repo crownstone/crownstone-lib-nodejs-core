@@ -179,9 +179,9 @@ export class ControlPacketsGenerator {
 
 
   static getCommitFilterChangesPacket(masterVersion: number, masterCRC: number) : Buffer {
-    let writer = new DataWriter(4);
+    let writer = new DataWriter(6);
     writer.putUInt16(masterVersion);
-    writer.putUInt16(masterCRC)
+    writer.putUInt32(masterCRC)
     let assetCommand = new AssetFilterCommand().loadBuffer(writer.getBuffer());
     return new ControlPacket(ControlType.COMMIT_FILTER_CHANGES).loadBuffer(assetCommand.getPacket()).getPacket()
   }

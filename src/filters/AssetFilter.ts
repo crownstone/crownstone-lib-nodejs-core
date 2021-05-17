@@ -44,7 +44,7 @@ export class AssetFilter {
    */
   getCRC() : number {
     let packet = this.getFilterPacket();
-    return Util.crc16_ccitt(packet);
+    return Util.crc32(packet);
   }
 
   _buildFilter() {

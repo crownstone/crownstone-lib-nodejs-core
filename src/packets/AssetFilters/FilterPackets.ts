@@ -44,7 +44,7 @@ export class FilterSummaries {
 
     this.supportedFilterProtocol = stepper.getUInt8();
     this.masterVersion = stepper.getUInt16();
-    this.masterCRC     = stepper.getUInt16();
+    this.masterCRC     = stepper.getUInt32();
     this.freeSpaceLeft = stepper.getUInt16();
 
     let amountOfFilters = stepper.getRemainingByteCount() / FILTER_SUMMARY_SIZE;
@@ -65,7 +65,7 @@ export class FilterSummary {
   constructor(data) {
     let stepper = new DataStepper(data);
     this.filterId   = stepper.getUInt8()
-    this.filterCRC  = stepper.getUInt16()
+    this.filterCRC  = stepper.getUInt32()
   }
 }
 

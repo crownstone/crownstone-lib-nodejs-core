@@ -18,13 +18,13 @@ export function getMasterCRC(filters: Record<filterId, filterCRC>) : number {
   let ids = Object.keys(filters);
   ids.sort((a,b) => { return Number(a) - Number(b)});
 
-  let writer = new DataWriter(ids.length*3);
+  let writer = new DataWriter(ids.length*5);
   for (let id of ids) {
     writer.putUInt8(Number(id));
-    writer.putUInt16(filters[id]);
+    writer.putUInt32(filters[id]);
   }
 
-  return Util.crc16_ccitt(writer.getBuffer())
+  return Util.crc32(writer.getBuffer())
 }
 
 

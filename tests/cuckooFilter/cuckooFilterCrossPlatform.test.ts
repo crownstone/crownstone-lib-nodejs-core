@@ -1,6 +1,13 @@
-import {CuckooFilterCore} from "../../src/filters/filterModules/cuckooFilter";
+import {CuckooFilterCore, generateCuckooFilterParameters} from "../../src/filters/filterModules/cuckooFilter";
 import * as fs from "fs";
 import path from "path";
+import {
+  FilterFormatMaskedAdData,
+  FilterMetaData,
+  FilterOutputDescription,
+} from "../../src/packets/AssetFilters/FilterMetaDataPackets";
+import {AssetFilter} from "../../src/filters/AssetFilter";
+import {FilterOutputDescriptionType} from "../../src/packets/AssetFilters/FilterTypes";
 
 
 beforeEach(async () => {})
@@ -60,4 +67,29 @@ test("CuckooFilter Cross platform test", async () => {
     }
   }
   expect(matchCount).toBe(filledBytes);
+})
+
+test("CuckooFilter ADType crossPlatform test", async () => {
+  let meta = new FilterMetaData(255);
+  meta.input = new FilterFormatMaskedAdData(0xff, 3);
+  meta.outputDescription = new FilterOutputDescription(FilterOutputDescriptionType.MAC_ADDRESS_REPORT)
+  let filter = new AssetFilter(meta);
+
+  let data = 'cd09';
+
+  filter.addToFilter(Buffer.from(data, 'hex'));
+
+  let params = generateCuckooFilterParameters(1);
+
+  expect(params.bucketCountLog2).toBe(0);
+  expect(params.nestPerBucket).toBe(2);
+
+  let filterPacket = filter.getFilterPacket();
+  let filterCRC = filter.getCRC();
+
+  let stringifiedDataPacket = filterPacket.toString('hex');
+  let stringifiedCRCPacket  = filterCRC.toString(16);
+
+  expect(stringifiedDataPacket).toBe("00ff02ff03000000000002000000002eec0000");
+  expect(stringifiedCRCPacket).toBe("4da705e8");
 })

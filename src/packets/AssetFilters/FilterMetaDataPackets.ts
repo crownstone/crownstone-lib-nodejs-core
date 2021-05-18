@@ -1,7 +1,7 @@
 import {DataWriter} from "../../util/DataWriter";
 import {FilterInputType, FilterType} from "./FilterTypes";
 
-type filterPacketFormat = FilterFormatMacAddress | FilterFormatAdData | FilterFormatMaskedAdData;
+type filterPacketFormat = FilterFormatMacAddress | FilterFormatFullAdData | FilterFormatMaskedAdData;
 
 export class FilterMetaData {
   type:              number;
@@ -35,9 +35,9 @@ export class FilterFormatMacAddress {
   }
 }
 
-export class FilterFormatAdData {
-  type:   number = FilterInputType.AD_DATA;
-  adType: number
+export class FilterFormatFullAdData {
+  type:   number = FilterInputType.FULL_AD_DATA;
+  adType: number;
 
   constructor(adType: number) {
     this.adType = adType;

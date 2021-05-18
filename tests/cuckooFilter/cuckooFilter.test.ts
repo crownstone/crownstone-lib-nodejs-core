@@ -120,13 +120,13 @@ test("Run Cuckoo test 2", async () => {
 
     if (contains !== shouldContain) {
       if (contains) { false_positives += 1; }
-      else          { false_negatives += 1}
+      else          { false_negatives += 1; }
     }
   }
 
-  expect(checkTolerance(false_negatives, mac_random.length, 0)).toBeTruthy()
-  expect(checkTolerance(false_positives, mac_random.length, 0.05)).toBeTruthy()
-  expect(false_positives).toBe(0)
+  expect(checkTolerance(false_negatives, mac_random.length, 0)).toBeTruthy();
+  expect(checkTolerance(false_positives, mac_random.length, 0.05)).toBeTruthy();
+  expect(false_positives).toBe(0);
 })
 
 test("Generate cuckoo parameters", async () => {

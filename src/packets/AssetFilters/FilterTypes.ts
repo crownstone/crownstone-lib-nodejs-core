@@ -5,7 +5,7 @@ export const FilterType = {
 
 export const FilterInputType = {
   MAC_ADDRESS:    0,
-  AD_DATA:        1,
+  FULL_AD_DATA:   1,
   MASKED_AD_DATA: 2,
 }
 

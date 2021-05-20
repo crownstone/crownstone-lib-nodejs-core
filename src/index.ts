@@ -13,7 +13,7 @@ import {parseOpCode3_type3, } from "./packets/AdvertisementTypes/OpCode3/opCode3
 import {parseOpCode4_type0, } from "./packets/AdvertisementTypes/OpCode4/opCode4_type0"
 import {parseOpCode7_type4, } from "./packets/AdvertisementTypes/OpCode7/opCode7_type4"
 import {CuckooFilterPacketData, CuckooExtendedFingerprintData, } from "./packets/AssetFilters/CuckooFilterPackets"
-import {FilterMetaData, FilterFormatMacAddress, FilterFormatFullAdData, FilterFormatMaskedAdData, FilterOutputDescription, } from "./packets/AssetFilters/FilterMetaDataPackets"
+import {FilterMetaData, FilterFormatMacAddress, FilterFormatFullAdData, FilterFormatMaskedAdData, FilterOutputDescription, FilterInputManufacturerId, } from "./packets/AssetFilters/FilterMetaDataPackets"
 import {FilterUploadChunk, FilterSummaries, FilterSummary, } from "./packets/AssetFilters/FilterPackets"
 import {FilterType, FilterInputType, FilterOutputDescriptionType, } from "./packets/AssetFilters/FilterTypes"
 import {CrownstoneErrors, } from "./packets/CrownstoneErrors"
@@ -84,6 +84,7 @@ export {
   FilterFormatFullAdData,
   FilterFormatMacAddress,
   FilterFormatMaskedAdData,
+  FilterInputManufacturerId,
   FilterInputType,
   FilterMetaData,
   FilterOutputDescription,

@@ -1,7 +1,7 @@
 import {DataWriter} from "../../util/DataWriter";
 import {FilterInputType, FilterType} from "./FilterTypes";
 
-type filterPacketFormat = FilterFormatMacAddress | FilterFormatFullAdData | FilterFormatMaskedAdData;
+type filterPacketFormat = FilterFormatMacAddress | FilterFormatFullAdData | FilterFormatMaskedAdData | FilterInputManufacturerId;
 
 export class FilterMetaData {
   type:              number;
@@ -34,6 +34,8 @@ export class FilterFormatMacAddress {
     return writer.getBuffer();
   }
 }
+
+
 
 export class FilterFormatFullAdData {
   type:   number = FilterInputType.FULL_AD_DATA;
@@ -87,4 +89,9 @@ export class FilterOutputDescription {
     }
     return writer.getBuffer();
   }
+}
+
+export class FilterInputManufacturerId extends FilterFormatMaskedAdData {
+  adType = 0xff;
+  mask   = 3; // this only looks at bits 0 and 1, which is the uint16 after 0xff
 }

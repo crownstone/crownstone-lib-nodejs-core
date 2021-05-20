@@ -1,4 +1,4 @@
-import {FilterMetaData} from "../packets/AssetFilters/FilterMetaDataPackets";
+import {FilterInputManufacturerId, FilterMetaData} from "../packets/AssetFilters/FilterMetaDataPackets";
 import {FilterInputType, FilterType} from "../packets/AssetFilters/FilterTypes";
 import {CuckooFilter} from "./filterModules/CuckooFilter";
 import {Util} from "../util/Util";
@@ -53,17 +53,29 @@ export class AssetFilter {
 
       // load the data into the filters. If the input is a mac address we have to treat it differently.
       if (this.metaData.input.type === FilterInputType.MAC_ADDRESS) {
-        for (let dataItem of this.internalBuffer) {
-          // MAC addresses are reversed over the air. The firmware will not rotate all of them, so we do it here.
-          dataItem.reverse();
-          this.filter.add(dataItem);
-        }
+        this._loadIntoFilterReversed();
+      }
+      else if (this.metaData.input instanceof FilterInputManufacturerId) {
+        this._loadIntoFilterReversed();
       }
       else {
-        for (let dataItem of this.internalBuffer) {
-          this.filter.add(dataItem);
-        }
+        this._loadIntoFilter()
       }
+    }
+  }
+
+  _loadIntoFilterReversed() {
+    for (let dataItem of this.internalBuffer) {
+      // MAC addresses are reversed over the air. The firmware will not rotate all of them, so we do it here.
+      // The same is true for manufactorer ID
+      dataItem.reverse();
+      this.filter.add(dataItem);
+    }
+  }
+
+  _loadIntoFilter() {
+    for (let dataItem of this.internalBuffer) {
+      this.filter.add(dataItem);
     }
   }
 }

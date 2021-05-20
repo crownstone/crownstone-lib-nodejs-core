@@ -92,6 +92,9 @@ export class FilterOutputDescription {
 }
 
 export class FilterInputManufacturerId extends FilterFormatMaskedAdData {
-  adType = 0xff;
-  mask   = 3; // this only looks at bits 0 and 1, which is the uint16 after 0xff
+  constructor() {
+    let adType = 0xff;
+    let mask   = 3; // this only looks at bits 0 and 1, which is the uint16 after 0xff
+    super(adType, mask)
+  }
 }

@@ -139,13 +139,30 @@ test("Test FFFF Match", async () => {
 
   expect(filter.contains(data)).toBe(true);
   expect(filter.contains(Buffer.from('ffff', 'hex'))).toBe(true);
+})
 
-  console.log(filter.getPacket())
-  filter.saturate();
-  console.log(filter.getPacket())
+test("Test Saturation Match", async () => {
+  let filter = new CuckooFilterCore(0, 2)
+  let data = Buffer.from('09cd', 'hex');
+
+  filter.add(data);
 
   expect(filter.contains(data)).toBe(true);
-  expect(filter.contains(Buffer.from('ffff', 'hex'))).toBe(false);
+  expect(filter.contains(Buffer.from('ffff', 'hex'))).toBe(true);
+
+  filter.saturate();
+
+  expect(filter.contains(data)).toBe(true);
+  for (let i = 0; i <= 0xffff; i++) {
+    let buff = new Buffer(2);
+    buff.writeUInt16LE(i,0);
+    if (buff.compare(data) === 0) {
+      expect(filter.contains(buff)).toBe(true);
+    }
+    else {
+      expect(filter.contains(buff)).toBe(false);
+    }
+  }
 })
 
 

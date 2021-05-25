@@ -33,21 +33,22 @@ export class FilterChunker {
   filterData: Buffer;
 
   index = 0;
-  maxChunkSize = 256;
+  maxChunkSize = 128;
 
-  constructor(filterId: number, filterData: Buffer) {
+  constructor(filterId: number, filterData: Buffer, maxChunkSize: number = 128) {
     this.filterId = filterId;
     this.filterData = filterData;
+    this.maxChunkSize = maxChunkSize;
   }
 
   getChunk() : { finished: boolean, packet: Buffer } {
     let totalSize = this.filterData.length;
     if (totalSize > this.maxChunkSize) {
       // CHUNK
-      let chunkSize = Math.min(this.maxChunkSize, totalSize - this.index*this.maxChunkSize);
-      let chunk = Buffer.from(this.filterData,this.index*this.maxChunkSize, chunkSize);
-      let result = {finished: false, packet: new FilterUploadChunk(this.filterId, this.index, totalSize, chunkSize, chunk).getPacket()};
-      this.index++;
+      let chunkSize = Math.min(this.maxChunkSize, totalSize - this.index);
+      let chunk = this.filterData.subarray(this.index, this.index+chunkSize)
+      let result = {finished: chunkSize < this.maxChunkSize, packet: new FilterUploadChunk(this.filterId, this.index, totalSize, chunkSize, chunk).getPacket()};
+      this.index += this.maxChunkSize;
       return result;
     }
     else {

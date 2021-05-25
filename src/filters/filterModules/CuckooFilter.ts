@@ -254,10 +254,10 @@ export class CuckooFilterCore {
 
   saturate() {
     if (this.rawAddedData.length < this.getMaxFingerprintCount()) {
-      let diff = this.getMaxFingerprintCount() -  this.rawAddedData.length;
+      let diff = this.getMaxFingerprintCount() - this.rawAddedData.length;
       this.saturating = true;
       for (let i = 0; i < diff; i++) {
-        let itemToLoad = this.rawAddedData[i%this.rawAddedData.length];
+        let itemToLoad = this.rawAddedData[i % this.rawAddedData.length];
         this.add(itemToLoad);
       }
       this.saturating = false;

@@ -48,5 +48,5 @@ test("Asset Filter type determiniation", async () => {
   let data = Buffer.from('09cd','hex');
   filter.addToFilter(data);
 
-  expect(filter._determineFilterType()).toBe(FilterType.EXACT_MATCH)
+  expect(filter._determineFilterType()).toBe(FilterType.EXACT_MATCH);
 })

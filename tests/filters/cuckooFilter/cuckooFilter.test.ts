@@ -131,25 +131,11 @@ test("Run Cuckoo test 2", async () => {
 
 
 
-test("Test FFFF Match", async () => {
-  let filter = new CuckooFilterCore(0, 2)
-  let data = Buffer.from('09cd', 'hex');
-
-  filter.add(data);
-
-  expect(filter.contains(data)).toBe(true);
-  expect(filter.contains(Buffer.from('ffff', 'hex'))).toBe(true);
-})
-
 test("Test Saturation Match", async () => {
   let filter = new CuckooFilterCore(0, 2)
   let data = Buffer.from('09cd', 'hex');
 
   filter.add(data);
-
-  expect(filter.contains(data)).toBe(true);
-  expect(filter.contains(Buffer.from('ffff', 'hex'))).toBe(true);
-
   filter.saturate();
 
   expect(filter.contains(data)).toBe(true);
@@ -165,10 +151,6 @@ test("Test Saturation Match", async () => {
   }
 })
 
-
-test("Generate cuckoo parameters", async () => {
-  expect(generateCuckooFilterParameters(1)).toStrictEqual({bucketCountLog2:0, nestPerBucket: 2})
-})
 
 function checkTolerance(fails, total, tolerance) {
   let fails_rel = fails / total

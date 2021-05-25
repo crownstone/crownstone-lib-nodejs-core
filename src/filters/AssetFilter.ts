@@ -108,14 +108,33 @@ export class AssetFilter {
   }
 
   /**
+   * Shorthand api method.
+   */
+  outputTrackableShortIdBasedOnMacAddress() : AssetFilter {
+    return this.outputTrackableShortId(new FilterFormatMacAddress())
+  }
+  /**
+   * Shorthand api method.
+   */
+  outputTrackableShortIdBasedOnFullAdType(adType: number) : AssetFilter {
+    return this.outputTrackableShortId(new FilterFormatFullAdData(adType))
+  }
+  /**
+   * Shorthand api method.
+   */
+  outputTrackableShortIdBasedOnMaskedAdType(adType: number, mask: number) : AssetFilter {
+    return this.outputTrackableShortId(new FilterFormatMaskedAdData(adType, mask))
+  }
+
+  /**
    * If an advertisement passes the filter, the mesh will treat this as profileId X for behaviour. 255 here means no profileId (and will not be used by behaviour).
    * If the in-network localization cannot determine which room it is in (or the mode is set to macRssiReport) we will treat this as an in-sphere.
    * @param profileId
    */
   useAsProfileId(profileId: number) : AssetFilter {
     this._ensureMetaData();
-    this.profileId = profileId;
-    this.metaData.profileId = profileId;
+    this.profileId = profileId ?? 255;
+    this.metaData.profileId = this.profileId;
     return this;
   }
 

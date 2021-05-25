@@ -256,6 +256,12 @@ export class AssetFilter {
       else {
         this._loadIntoFilter();
       }
+
+
+      if (this.filter instanceof CuckooFilter) {
+        // The saturation of the filter is required since the filter might match on the uninitalized slots.
+        this.filter.saturate();
+      }
     }
   }
 

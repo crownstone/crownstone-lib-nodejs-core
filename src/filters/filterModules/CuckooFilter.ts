@@ -252,6 +252,10 @@ export class CuckooFilterCore {
     return data.getPacket();
   }
 
+  /**
+   * This will add duplicate data to fill up all duplicate slots.
+   * If we leave these empty, the cuckoo filter will match on 0xffff, regardless if that fingerprint is added to the filter.
+   */
   saturate() {
     if (this.rawAddedData.length < this.getMaxFingerprintCount()) {
       let diff = this.getMaxFingerprintCount() - this.rawAddedData.length;

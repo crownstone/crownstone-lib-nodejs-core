@@ -2,9 +2,10 @@
 import {Logger, } from "./Logger"
 import {CrownstoneSettings, } from "./containers/CrownstoneSettings"
 import {UserLevel, CrownstoneErrorType, GetPesistenceMode, SetPesistenceMode, } from "./declarations/enums"
-import {AssetFilter, } from "./filters/AssetFilter"
+import {MAX_AMOUNT_OF_FILTERS, AssetFilter, } from "./filters/AssetFilter"
 import {RandomGeneratorMSWS, } from "./filters/RandomGenerator"
 import {ExtendedFingerprint, generateCuckooFilterParameters, CuckooFilterCore, CuckooFilter, } from "./filters/filterModules/CuckooFilter"
+import {ExactMatchFilter, } from "./filters/filterModules/ExactMatchFilter"
 import {Advertisement, } from "./packets/Advertisement"
 import {parseOpCode3_type0, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type0"
 import {parseOpCode3_type1, } from "./packets/AdvertisementTypes/OpCode3/opCode3_type1"
@@ -77,6 +78,7 @@ export {
   EncryptedPackageBase,
   EncryptionHandler,
   EventBusClass,
+  ExactMatchFilter,
   ExtendedFingerprint,
   FILTER_PROTOCOL,
   FactoryResetPacket,
@@ -98,6 +100,7 @@ export {
   Logger,
   Lollipop,
   LollipopUint16,
+  MAX_AMOUNT_OF_FILTERS,
   MeshMultiSwitchPacket,
   NotificationMerger,
   ProcessType,

@@ -1,13 +1,8 @@
-import {CuckooFilterCore, generateCuckooFilterParameters} from "../../src/filters/filterModules/cuckooFilter";
+import {CuckooFilterCore, generateCuckooFilterParameters} from "../../../src/filters/filterModules/cuckooFilter";
 import * as fs from "fs";
 import path from "path";
-import {
-  FilterFormatMaskedAdData,
-  FilterMetaData,
-  FilterOutputDescription,
-} from "../../src/packets/AssetFilters/FilterMetaDataPackets";
-import {AssetFilter} from "../../src/filters/AssetFilter";
-import {FilterOutputDescriptionType} from "../../src/packets/AssetFilters/FilterTypes";
+import {AssetFilter} from "../../../src/filters/AssetFilter";
+import {FilterType} from "../../../src/packets/AssetFilters/FilterTypes";
 
 
 beforeEach(async () => {})
@@ -70,12 +65,12 @@ test("CuckooFilter Cross platform test", async () => {
 })
 
 test("CuckooFilter ADType crossPlatform test", async () => {
-  let meta = new FilterMetaData(255);
-  meta.input = new FilterFormatMaskedAdData(0xff, 3);
-  meta.outputDescription = new FilterOutputDescription(FilterOutputDescriptionType.MAC_ADDRESS_REPORT)
-  let filter = new AssetFilter(meta);
+  let filter = new AssetFilter()
+                    .setFilterType(FilterType.CUCKCOO_V1)
+                    .filterOnManufacturerId()
+                    .outputMacRssiReport()
 
-  let data = 'cd09';
+  let data = '09cd';
 
   filter.addToFilter(Buffer.from(data, 'hex'));
 

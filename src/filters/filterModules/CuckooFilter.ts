@@ -37,6 +37,9 @@ export class CuckooFilterCore {
   victim            : ExtendedFingerprint;
   bucketArray       : number[] = [];
 
+  rawAddedData      : Buffer[] = [];
+  saturating        : boolean = false;
+
   constructor(bucketCountLog2: number, nestPerBucket: number) {
     this.bucketCountLog2 = bucketCountLog2;
     this.bucketCount = 1 << this.bucketCountLog2;
@@ -50,14 +53,10 @@ export class CuckooFilterCore {
 
   clear() {
     this.victim = new ExtendedFingerprint(0, 0, 0);
-    this.bucketArray = new Array(this.getFingerPrintCount());
+    this.bucketArray = new Array(this.getMaxFingerprintCount());
     for (let i = 0; i < this.bucketArray.length; i++) {
       this.bucketArray[i] = 0;
     }
-  }
-
-  getFingerPrintCount() {
-    return this.bucketCount * this.nestPerBucket;
   }
 
   hash(data: Buffer | number[]) {
@@ -65,6 +64,9 @@ export class CuckooFilterCore {
   }
 
   add(key: number[] | Buffer) : boolean {
+    // this is used for saturation.
+    this.rawAddedData.push(Buffer.from(key));
+
     return this.addExtendedFingerprint(this.getExtendedFingerprint(key));
   }
 
@@ -85,7 +87,7 @@ export class CuckooFilterCore {
   }
 
   addExtendedFingerprint(fingerprint : ExtendedFingerprint) : boolean {
-    if (this.containsExtendedFingerprint(fingerprint)) {
+    if (this.containsExtendedFingerprint(fingerprint) && this.saturating === false) {
       return true;
     }
 
@@ -248,6 +250,18 @@ export class CuckooFilterCore {
   getPacket() : Buffer {
     let data = new CuckooFilterPacketData(this.bucketCountLog2, this.nestPerBucket, this.victim, this.bucketArray)
     return data.getPacket();
+  }
+
+  saturate() {
+    if (this.rawAddedData.length < this.getMaxFingerprintCount()) {
+      let diff = this.getMaxFingerprintCount() -  this.rawAddedData.length;
+      this.saturating = true;
+      for (let i = 0; i < diff; i++) {
+        let itemToLoad = this.rawAddedData[i%this.rawAddedData.length];
+        this.add(itemToLoad);
+      }
+      this.saturating = false;
+    }
   }
 }
 

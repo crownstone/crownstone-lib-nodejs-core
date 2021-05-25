@@ -1,7 +1,7 @@
-import {Util} from "../../src/util/Util";
-import {RandomGeneratorMSWS} from "../../src/filters/randomGenerator";
-import {CuckooFilterCore} from "../../src/filters/filterModules/CuckooFilter";
-import {generateCuckooFilterParameters} from "../../src/filters/filterModules/CuckooFilter";
+import {Util} from "../../../src/util/Util";
+import {RandomGeneratorMSWS} from "../../../src/filters/randomGenerator";
+import {CuckooFilterCore} from "../../../src/filters/filterModules/CuckooFilter";
+import {generateCuckooFilterParameters} from "../../../src/filters/filterModules/CuckooFilter";
 
 beforeEach(async () => {})
 beforeAll( async () => {})
@@ -128,6 +128,26 @@ test("Run Cuckoo test 2", async () => {
   expect(checkTolerance(false_positives, mac_random.length, 0.05)).toBeTruthy();
   expect(false_positives).toBe(0);
 })
+
+
+
+test("Test FFFF Match", async () => {
+  let filter = new CuckooFilterCore(0, 2)
+  let data = Buffer.from('09cd', 'hex');
+
+  filter.add(data);
+
+  expect(filter.contains(data)).toBe(true);
+  expect(filter.contains(Buffer.from('ffff', 'hex'))).toBe(true);
+
+  console.log(filter.getPacket())
+  filter.saturate();
+  console.log(filter.getPacket())
+
+  expect(filter.contains(data)).toBe(true);
+  expect(filter.contains(Buffer.from('ffff', 'hex'))).toBe(false);
+})
+
 
 test("Generate cuckoo parameters", async () => {
   expect(generateCuckooFilterParameters(1)).toStrictEqual({bucketCountLog2:0, nestPerBucket: 2})

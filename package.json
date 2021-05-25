@@ -1,10 +1,11 @@
 {
   "name": "crownstone-core",
-  "version": "0.17.2",
+  "version": "0.18.0",
   "scripts": {
     "start": "tsc -watch",
     "test": "jest --useStderr --clearMocks",
     "build": "rimraf ./dist && tsc",
+    "prerelease": "node coreParser.js; rimraf ./dist && tsc",
     "cleanTest": "jest --useStderr --no-cache --clearMocks"
   },
   "main": "dist/index.js",

@@ -191,4 +191,8 @@ export class ControlPacketsGenerator {
     let assetCommand = new AssetFilterCommand().loadBuffer(chunk);
     return new ControlPacket(ControlType.UPLOAD_FILTER).loadBuffer(assetCommand.getPacket()).getPacket()
   }
+
+  static getRefreshTopologyPacket() : Buffer {
+    return new ControlPacket(ControlType.REFRESH_TOPOLOGY).getPacket()
+  }
 }

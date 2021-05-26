@@ -30,15 +30,15 @@ export class FilterUploadChunk {
 
 
 
-const FILTER_SUMMARY_SIZE = 4;
+const FILTER_SUMMARY_SIZE = 5;
 
 export class FilterSummaries {
   supportedFilterProtocol: number;
-  masterVersion: number;
-  masterCRC: number;
-  freeSpaceLeft: number;
+  masterVersion:           number;
+  masterCRC:               number;
+  freeSpaceLeft:           number;
+  filterSummaries:         FilterSummary[] = [];
 
-  filterSummaries: FilterSummary[] = [];
   constructor(data: Buffer) {
     let stepper = new DataStepper(data);
 

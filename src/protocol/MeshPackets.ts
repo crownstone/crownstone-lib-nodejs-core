@@ -50,9 +50,9 @@ export class MeshMultiSwitchPacket {
 
 export class MeshCommandBroadcastPacket {
   type           : number = MeshCommandType.CONTROL;
-  flags          : number = 0
-  transmissions  : number = 3
-  idCount        : number = 0
+  flags          : number = 1; // bit 0 high = broadcast
+  transmissions  : number = 3;
+  idCount        : number = 0;
   commandPayload: Buffer;
 
   constructor(commandPayload) {

@@ -25,8 +25,8 @@ import {SUPPORTED_PROTOCOL_VERSION, FILTER_PROTOCOL, BasePacket, ControlPacket, 
 import {DeviceCharacteristics, CrownstoneCharacteristics, SetupCharacteristics, DFUCharacteristics, } from "./protocol/Characteristics"
 import {ControlPacketsGenerator, } from "./protocol/ControlPackets"
 import {CrownstoneError, } from "./protocol/CrownstoneError"
-import {ControlType, ControlTypeInv, StateType, DeviceType, ResultValue, ResultValueInv, ProcessType, BroadcastTypes, } from "./protocol/CrownstoneTypes"
-import {StoneMultiSwitchPacket, MeshMultiSwitchPacket, } from "./protocol/MeshPackets"
+import {ControlType, ControlTypeInv, StateType, DeviceType, ResultValue, ResultValueInv, ProcessType, BroadcastTypes, MeshCommandType, } from "./protocol/CrownstoneTypes"
+import {StoneMultiSwitchPacket, MeshMultiSwitchPacket, MeshCommandBroadcastPacket, } from "./protocol/MeshPackets"
 import {CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID, DFU_ADVERTISEMENT_SERVICE_UUID, CSServices, DFUServices, ServiceUUIDArray, } from "./protocol/Services"
 import {DataStepper, } from "./util/DataStepper"
 import {DataWriter, } from "./util/DataWriter"
@@ -101,6 +101,8 @@ export {
   Lollipop,
   LollipopUint16,
   MAX_AMOUNT_OF_FILTERS,
+  MeshCommandBroadcastPacket,
+  MeshCommandType,
   MeshMultiSwitchPacket,
   NotificationMerger,
   ProcessType,

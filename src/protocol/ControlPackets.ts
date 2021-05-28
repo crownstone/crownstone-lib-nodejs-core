@@ -2,6 +2,7 @@ import {ControlType} from './CrownstoneTypes';
 import {AssetFilterCommand, ControlPacket, FactoryResetPacket} from "./BasePackets";
 import {Util} from "../util/Util";
 import {DataWriter} from "../util/DataWriter";
+import {MeshCommandBroadcastPacket} from "./MeshPackets";
 
 export class ControlPacketsGenerator {
 
@@ -175,6 +176,14 @@ export class ControlPacketsGenerator {
 
   static getGetFilterSummariesPacket() : Buffer {
     return new ControlPacket(ControlType.GET_FILTER_SUMMARIES).getPacket()
+  }
+
+  /**
+   * The provided controlpacket will be wrapped in an MeshCommandBroadcastPacket, which will be wrapped in a Controlpacket.
+   * @param controlPacket
+   */
+  static getMeshCommandBroadcastPacket(controlPacket: Buffer) : Buffer {
+    return new ControlPacket(ControlType.MESH_COMMAND).loadBuffer(new MeshCommandBroadcastPacket(controlPacket).getPacket()).getPacket()
   }
 
 

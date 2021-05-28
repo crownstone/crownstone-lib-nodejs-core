@@ -1,3 +1,6 @@
+import {MeshCommandType} from "./CrownstoneTypes";
+import {DataWriter} from "../util/DataWriter";
+
 export class StoneMultiSwitchPacket {
   crownstoneId = 0;
   state = 0;
@@ -42,5 +45,28 @@ export class MeshMultiSwitchPacket {
     }
 
     return packet;
+  }
+}
+
+export class MeshCommandBroadcastPacket {
+  type           : number = MeshCommandType.CONTROL;
+  flags          : number = 0
+  transmissions  : number = 3
+  idCount        : number = 0
+  commandPayload: Buffer;
+
+  constructor(commandPayload) {
+    this.commandPayload = commandPayload;
+  }
+
+  getPacket() : Buffer {
+    let writer = new DataWriter(4);
+    writer.putUInt8(this.type)
+    writer.putUInt8(this.flags)
+    writer.putUInt8(this.transmissions)
+    writer.putUInt8(this.idCount)
+    writer.putBuffer(this.commandPayload);
+
+    return writer.getBuffer();
   }
 }

@@ -192,3 +192,8 @@ export const BroadcastTypes = {
   SET_TIME              : 2,
   BEHAVIOUR_SETTINGS    : 3,
 };
+
+
+export const MeshCommandType = {
+  CONTROL: 0
+}

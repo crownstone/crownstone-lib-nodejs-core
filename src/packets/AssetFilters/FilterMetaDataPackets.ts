@@ -13,6 +13,7 @@ export class FilterMetaData {
   constructor(profileId: number, type: number = FilterType.CUCKCOO_V1) {
     this.profileId = profileId ?? 255;
     this.type = type;
+    this.flags = 0;
   }
 
   getPacket() : Buffer {

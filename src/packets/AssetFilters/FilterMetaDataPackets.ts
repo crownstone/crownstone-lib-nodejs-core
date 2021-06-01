@@ -5,6 +5,7 @@ type filterPacketFormat = FilterFormatMacAddress | FilterFormatFullAdData | Filt
 
 export class FilterMetaData {
   type:              number;
+  flags:             number;
   profileId:         number;
   input:             filterPacketFormat
   outputDescription: FilterOutputDescription
@@ -15,8 +16,9 @@ export class FilterMetaData {
   }
 
   getPacket() : Buffer {
-    let writer = new DataWriter(2);
+    let writer = new DataWriter(3);
     writer.putUInt8(this.type);
+    writer.putUInt8(this.flags);
     writer.putUInt8(this.profileId);
     writer.putBuffer(this.input.getPacket());
     writer.putBuffer(this.outputDescription.getPacket());

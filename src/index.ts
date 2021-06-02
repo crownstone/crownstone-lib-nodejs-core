@@ -28,6 +28,7 @@ import {CrownstoneError, } from "./protocol/CrownstoneError"
 import {ControlType, ControlTypeInv, StateType, DeviceType, ResultValue, ResultValueInv, ProcessType, BroadcastTypes, MeshCommandType, } from "./protocol/CrownstoneTypes"
 import {StoneMultiSwitchPacket, MeshMultiSwitchPacket, MeshCommandBroadcastPacket, } from "./protocol/MeshPackets"
 import {CROWNSTONE_PLUG_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID, CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID, DFU_ADVERTISEMENT_SERVICE_UUID, CSServices, DFUServices, ServiceUUIDArray, } from "./protocol/Services"
+import {Bitmask, UInt8Bitmask, UInt16Bitmask, UInt32Bitmask, } from "./util/Bitmask"
 import {DataStepper, } from "./util/DataStepper"
 import {DataWriter, } from "./util/DataWriter"
 import {EncryptionHandler, EncryptedPackageBase, EncryptedPackage, } from "./util/EncryptionHandler"
@@ -47,6 +48,7 @@ export {
   AssetFilter,
   AssetFilterCommand,
   BasePacket,
+  Bitmask,
   BroadcastTypes,
   CROWNSTONE_BUILTIN_ADVERTISEMENT_SERVICE_UUID,
   CROWNSTONE_GUIDESTONE_ADVERTISEMENT_SERVICE_UUID,
@@ -118,6 +120,9 @@ export {
   SetupCharacteristics,
   StateType,
   StoneMultiSwitchPacket,
+  UInt16Bitmask,
+  UInt32Bitmask,
+  UInt8Bitmask,
   UserLevel,
   Util,
   generateCuckooFilterParameters,

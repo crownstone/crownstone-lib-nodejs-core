@@ -1,5 +1,6 @@
 import {DataWriter} from "../../util/DataWriter";
 import {FilterInputType, FilterType} from "./FilterTypes";
+import {UInt8Bitmask} from "../../util/Bitmask";
 
 type filterPacketFormat = FilterFormatMacAddress | FilterFormatFullAdData | FilterFormatMaskedAdData | FilterInputManufacturerId;
 
@@ -10,10 +11,14 @@ export class FilterMetaData {
   input:             filterPacketFormat
   outputDescription: FilterOutputDescription
 
-  constructor(profileId: number, type: number = FilterType.CUCKCOO_V1) {
+  constructor(profileId: number, type: number = FilterType.CUCKCOO_V1, exclude: boolean = false) {
     this.profileId = profileId ?? 255;
     this.type = type;
-    this.flags = 0;
+    let flags = new UInt8Bitmask();
+    if (exclude) {
+      flags.setHigh(0);
+    }
+    this.flags = flags.value;
   }
 
   getPacket() : Buffer {

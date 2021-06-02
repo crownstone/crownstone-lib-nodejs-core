@@ -8,6 +8,7 @@ import {FilterInputType, FilterOutputDescriptionType, FilterType} from "../packe
 import {CuckooFilter} from "./filterModules/CuckooFilter";
 import {Util} from "../util/Util";
 import {ExactMatchFilter} from "./filterModules/ExactMatchFilter";
+import {UInt8Bitmask} from "../util/Bitmask";
 
 export const MAX_AMOUNT_OF_FILTERS = 8;
 
@@ -140,6 +141,27 @@ export class AssetFilter {
 
 
   /**
+   * An exclude filter will force the Crownstone to ignore any advertisements that pass the filter.
+   */
+  markAsExcludeFilter() {
+    this._ensureMetaData();
+    let bitmask = new UInt8Bitmask(this.metaData.flags);
+    bitmask.setHigh(0);
+    this.metaData.flags = bitmask.value;
+  }
+
+  /**
+   * An include filter is a normal filter. Anything that passes it will be handled according to the output description.
+   */
+  markAsIncludeFilter() {
+    this._ensureMetaData();
+    let bitmask = new UInt8Bitmask(this.metaData.flags);
+    bitmask.setLow(0);
+    this.metaData.flags = bitmask.value;
+  }
+
+
+  /**
    * This allows you to set the type of filter to be used.
    * @param filterType
    */
@@ -178,7 +200,7 @@ export class AssetFilter {
       return FilterType.EXACT_MATCH;
     }
 
-    return FilterType.CUCKCOO_V1;
+    return FilterType.CUCKCOO;
   }
 
   _determineItemSize() : number {
@@ -239,7 +261,7 @@ export class AssetFilter {
     this.metaData.type = this.filterType;
 
     if (this.filter === null) {
-      if (this.filterType === FilterType.CUCKCOO_V1) {
+      if (this.filterType === FilterType.CUCKCOO) {
         this.filter = new CuckooFilter(this.internalBuffer.length);
       }
       else {

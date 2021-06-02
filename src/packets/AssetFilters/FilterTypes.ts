@@ -1,6 +1,6 @@
 
 export const FilterType = {
-  CUCKCOO_V1: 0,
+  CUCKCOO: 0,
   EXACT_MATCH: 1,
 }
 

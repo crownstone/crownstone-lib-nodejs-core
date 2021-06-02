@@ -11,7 +11,7 @@ export class FilterMetaData {
   input:             filterPacketFormat
   outputDescription: FilterOutputDescription
 
-  constructor(profileId: number, type: number = FilterType.CUCKCOO_V1, exclude: boolean = false) {
+  constructor(profileId: number, type: number = FilterType.CUCKCOO, exclude: boolean = false) {
     this.profileId = profileId ?? 255;
     this.type = type;
     let flags = new UInt8Bitmask();

@@ -21,13 +21,13 @@ export class FilterMetaData {
     this.flags = flags.value;
   }
 
-  getPacket() : Buffer {
+  getPacket(filterCommandProtocol: number) : Buffer {
     let writer = new DataWriter(3);
     writer.putUInt8(this.type);
     writer.putUInt8(this.flags);
     writer.putUInt8(this.profileId);
-    writer.putBuffer(this.input.getPacket());
-    writer.putBuffer(this.outputDescription.getPacket());
+    writer.putBuffer(this.input.getPacket(filterCommandProtocol));
+    writer.putBuffer(this.outputDescription.getPacket(filterCommandProtocol));
 
     return writer.getBuffer();
   }
@@ -36,7 +36,7 @@ export class FilterMetaData {
 export class FilterFormatMacAddress {
   type: number = FilterInputType.MAC_ADDRESS;
 
-  getPacket() : Buffer {
+  getPacket(filterCommandProtocol: number) : Buffer {
     let writer = new DataWriter(1);
     writer.putUInt8(this.type)
     return writer.getBuffer();
@@ -53,7 +53,7 @@ export class FilterFormatFullAdData {
     this.adType = adType;
   }
 
-  getPacket() : Buffer {
+  getPacket(filterCommandProtocol: number) : Buffer {
     let writer = new DataWriter(2);
     writer.putUInt8(this.type)
     writer.putUInt8(this.adType)
@@ -71,7 +71,7 @@ export class FilterFormatMaskedAdData {
     this.mask = mask;
   }
 
-  getPacket() : Buffer {
+  getPacket(filterCommandProtocol: number) : Buffer {
     let writer = new DataWriter(6);
     writer.putUInt8(this.type)
     writer.putUInt8(this.adType)
@@ -89,11 +89,11 @@ export class FilterOutputDescription {
     this.format = format;
   }
 
-  getPacket() : Buffer {
+  getPacket(filterCommandProtocol: number) : Buffer {
     let writer = new DataWriter(1);
     writer.putUInt8(this.type);
     if (this.format !== null) {
-      writer.putBuffer(this.format.getPacket())
+      writer.putBuffer(this.format.getPacket(filterCommandProtocol))
     }
     return writer.getBuffer();
   }

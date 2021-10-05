@@ -10,8 +10,7 @@ export function increaseMasterVersion(currentVersion: number) : number {
 
 /**
  * Get the CRC for this filter based on the metaData and the filterPacket.
- * @param metadata
- * @param filterPacket
+ * @param filters
  */
 export function getMasterCRC(filters: Record<filterId, filterCRC>) : number {
   // Get filterCRC
@@ -41,7 +40,7 @@ export class FilterChunker {
     this.maxChunkSize = maxChunkSize;
   }
 
-  getChunk() : { finished: boolean, packet: Buffer } {
+  getChunk(filterCommandProtocol: number) : { finished: boolean, packet: Buffer } {
     let totalSize = this.filterData.length;
     if (totalSize > this.maxChunkSize) {
       // CHUNK

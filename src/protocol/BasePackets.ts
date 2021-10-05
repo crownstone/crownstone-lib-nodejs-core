@@ -183,8 +183,9 @@ export class ControlStateSetPacket extends BasePacket {
 export class AssetFilterCommand extends BasePacket {
   filterCommandProtocol: number = FILTER_PROTOCOL
 
-  constructor() {
+  constructor(filterCommandProtocol: number) {
     super(null);
+    this.filterCommandProtocol = filterCommandProtocol;
     this.payloadBuffer = Buffer.alloc(0)
   }
 

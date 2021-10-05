@@ -11,6 +11,7 @@ export const FilterInputType = {
 }
 
 export const FilterOutputDescriptionType = {
-  MAC_ADDRESS_REPORT:   0,
-  SHORT_ASSET_ID_TRACK: 1,
+  MAC_ADDRESS_REPORT: 0,
+  ASSET_ID_TRACK:     1,
+  ASSET_ID_REPORT:    2,
 }

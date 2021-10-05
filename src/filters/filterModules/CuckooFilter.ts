@@ -200,8 +200,8 @@ export class CuckooFilterCore {
   }
 
   removeExtendedFingerprint(fingerprint: ExtendedFingerprint) : boolean {
-    if (this.remove_fingerprint_from_bucket(fingerprint.fingerprint, fingerprint.bucketA) ||
-        this.remove_fingerprint_from_bucket(fingerprint.fingerprint, fingerprint.bucketB)) {
+    if (this.removeFingerprintFromBucket(fingerprint.fingerprint, fingerprint.bucketA) ||
+        this.removeFingerprintFromBucket(fingerprint.fingerprint, fingerprint.bucketB)) {
       // short ciruits nicely:
       //    tries bucketA,
       //    on fail try B,
@@ -217,7 +217,7 @@ export class CuckooFilterCore {
   }
 
 
-  remove_fingerprint_from_bucket(fingerprint: number, bucketNumber: number) {
+  removeFingerprintFromBucket(fingerprint: number, bucketNumber: number) {
     for (let i = 0; i < this.nestPerBucket; i++) {
       let candidate = this.lookupFingerprintIndex(bucketNumber, i) // candidate_fingerprint_for_removal_in_array_index
       if (this.bucketArray[candidate] === fingerprint) {

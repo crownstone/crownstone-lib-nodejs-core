@@ -37,6 +37,7 @@ export class AssetFilter {
     this.metaData = metaData;
   }
 
+
   /**
    * Use the mac address as input data for the filter.
    */
@@ -45,6 +46,7 @@ export class AssetFilter {
     this.metaData.input = new FilterFormatMacAddress();
     return this;
   }
+
 
   /**
    * Use the manufacturerId as input data for the filter
@@ -55,6 +57,7 @@ export class AssetFilter {
     return this;
   }
 
+
   /**
    * Use the ID and all the accompanying data of the provided adType as input data for the filter
    * @param adType
@@ -64,6 +67,7 @@ export class AssetFilter {
     this.metaData.input = new FilterFormatFullAdData(adType);
     return this;
   }
+
 
   /**
    * Use part of the provided ad type as the input data for the filter.
@@ -85,6 +89,7 @@ export class AssetFilter {
     return this;
   }
 
+
   /**
    * If an advertisement passes the filter, the Crownstone will send a report containing the mac address and rssi of the source of the advertisement to the hub.
    */
@@ -104,9 +109,10 @@ export class AssetFilter {
    */
   outputTrackableShortId(basedOn: FilterFormatMacAddress | FilterFormatFullAdData | FilterFormatMaskedAdData) : AssetFilter {
     this._ensureMetaData();
-    this.metaData.outputDescription = new FilterOutputDescription(FilterOutputDescriptionType.SHORT_ASSET_ID_TRACK, basedOn)
+    this.metaData.outputDescription = new FilterOutputDescription(FilterOutputDescriptionType.ASSET_ID_TRACK, basedOn)
     return this;
   }
+
 
   /**
    * Shorthand api method.
@@ -114,18 +120,23 @@ export class AssetFilter {
   outputTrackableShortIdBasedOnMacAddress() : AssetFilter {
     return this.outputTrackableShortId(new FilterFormatMacAddress())
   }
+
+
   /**
    * Shorthand api method.
    */
   outputTrackableShortIdBasedOnFullAdType(adType: number) : AssetFilter {
     return this.outputTrackableShortId(new FilterFormatFullAdData(adType))
   }
+
+
   /**
    * Shorthand api method.
    */
   outputTrackableShortIdBasedOnMaskedAdType(adType: number, mask: number) : AssetFilter {
     return this.outputTrackableShortId(new FilterFormatMaskedAdData(adType, mask))
   }
+
 
   /**
    * If an advertisement passes the filter, the mesh will treat this as profileId X for behaviour. 255 here means no profileId (and will not be used by behaviour).
@@ -149,6 +160,7 @@ export class AssetFilter {
     bitmask.setHigh(0);
     this.metaData.flags = bitmask.value;
   }
+
 
   /**
    * An include filter is a normal filter. Anything that passes it will be handled according to the output description.
@@ -208,6 +220,7 @@ export class AssetFilter {
     return this.internalBuffer[0].length;
   }
 
+
   /**
    * Add your data to the filter. This data is normally ordered. The
    * @param data
@@ -232,9 +245,9 @@ export class AssetFilter {
   /**
    * This packet is what will be transferred to a Crownstone. It is the full byte representation of the filter.
    */
-  getFilterPacket() : Buffer {
+  getFilterPacket(filterCommandProtocol: number) : Buffer {
     this._buildFilter();
-    let filterPacket = Buffer.concat([this.metaData.getPacket(), this.filter.getPacket()])
+    let filterPacket = Buffer.concat([this.metaData.getPacket(filterCommandProtocol), this.filter.getPacket()])
     return filterPacket;
   }
 
@@ -242,8 +255,8 @@ export class AssetFilter {
   /**
    * Get the CRC of this filter
    */
-  getCRC() : number {
-    let packet = this.getFilterPacket();
+  getCRC(filterCommandProtocol: number) : number {
+    let packet = this.getFilterPacket(filterCommandProtocol);
     return Util.crc32(packet);
   }
 
@@ -287,6 +300,7 @@ export class AssetFilter {
     }
   }
 
+
   _loadIntoFilterReversed() {
     for (let dataItem of this.internalBuffer) {
       // MAC addresses are reversed over the air. The firmware will not rotate all of them, so we do it here.
@@ -295,6 +309,7 @@ export class AssetFilter {
       this.filter.add(dataItem);
     }
   }
+
 
   _loadIntoFilter() {
     for (let dataItem of this.internalBuffer) {

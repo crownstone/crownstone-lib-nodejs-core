@@ -168,14 +168,33 @@ export class ControlPacketsGenerator {
   }
 
 
-  static getRemoveFilterPacket(filterId: number) : Buffer {
-    let assetCommand = new AssetFilterCommand().loadUInt8(filterId);
+  static getRemoveFilterPacket(filterId: number, filterCommandProtocol: number) : Buffer {
+    let assetCommand = new AssetFilterCommand(filterCommandProtocol).loadUInt8(filterId);
     return new ControlPacket(ControlType.REMOVE_FILTER).loadBuffer(assetCommand.getPacket()).getPacket()
   }
 
 
-  static getGetFilterSummariesPacket() : Buffer {
+  static getGetFilterSummariesPacket(filterCommandProtocol: number) : Buffer {
     return new ControlPacket(ControlType.GET_FILTER_SUMMARIES).getPacket()
+  }
+
+
+  static getCommitFilterChangesPacket(masterVersion: number, masterCRC: number, filterCommandProtocol: number) : Buffer {
+    let writer = new DataWriter(6);
+    writer.putUInt16(masterVersion);
+    writer.putUInt32(masterCRC)
+    let assetCommand = new AssetFilterCommand(filterCommandProtocol).loadBuffer(writer.getBuffer());
+    return new ControlPacket(ControlType.COMMIT_FILTER_CHANGES).loadBuffer(assetCommand.getPacket()).getPacket()
+  }
+
+
+  static getUploadFilterPacket(chunk: Buffer, filterCommandProtocol: number) : Buffer {
+    let assetCommand = new AssetFilterCommand(filterCommandProtocol).loadBuffer(chunk);
+    return new ControlPacket(ControlType.UPLOAD_FILTER).loadBuffer(assetCommand.getPacket()).getPacket()
+  }
+
+  static getRefreshTopologyPacket() : Buffer {
+    return new ControlPacket(ControlType.REFRESH_TOPOLOGY).getPacket()
   }
 
   /**
@@ -184,24 +203,5 @@ export class ControlPacketsGenerator {
    */
   static getMeshCommandBroadcastPacket(controlPacket: Buffer) : Buffer {
     return new ControlPacket(ControlType.MESH_COMMAND).loadBuffer(new MeshCommandBroadcastPacket(controlPacket).getPacket()).getPacket()
-  }
-
-
-  static getCommitFilterChangesPacket(masterVersion: number, masterCRC: number) : Buffer {
-    let writer = new DataWriter(6);
-    writer.putUInt16(masterVersion);
-    writer.putUInt32(masterCRC)
-    let assetCommand = new AssetFilterCommand().loadBuffer(writer.getBuffer());
-    return new ControlPacket(ControlType.COMMIT_FILTER_CHANGES).loadBuffer(assetCommand.getPacket()).getPacket()
-  }
-
-
-  static getUploadFilterPacket(chunk: Buffer) : Buffer {
-    let assetCommand = new AssetFilterCommand().loadBuffer(chunk);
-    return new ControlPacket(ControlType.UPLOAD_FILTER).loadBuffer(assetCommand.getPacket()).getPacket()
-  }
-
-  static getRefreshTopologyPacket() : Buffer {
-    return new ControlPacket(ControlType.REFRESH_TOPOLOGY).getPacket()
   }
 }

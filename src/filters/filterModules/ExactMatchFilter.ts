@@ -41,7 +41,7 @@ export class ExactMatchFilter {
   }
 
 
-  getPacket() {
+  getPacket(filterCommandProtocol: number = 0) {
     this.itemCount = this.items.length;
     this._sort();
 

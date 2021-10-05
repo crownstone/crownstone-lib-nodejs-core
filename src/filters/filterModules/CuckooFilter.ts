@@ -244,7 +244,7 @@ export class CuckooFilterCore {
   }
 
 
-  getPacket() : Buffer {
+  getPacket(filterCommandProtocol = 0) : Buffer {
     let data = new CuckooFilterPacketData(this.bucketCountLog2, this.nestPerBucket, this.victim, this._getCleanedupBucketArray())
     return data.getPacket();
   }

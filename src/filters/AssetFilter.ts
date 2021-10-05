@@ -247,7 +247,7 @@ export class AssetFilter {
    */
   getFilterPacket(filterCommandProtocol: number) : Buffer {
     this._buildFilter();
-    let filterPacket = Buffer.concat([this.metaData.getPacket(filterCommandProtocol), this.filter.getPacket()])
+    let filterPacket = Buffer.concat([this.metaData.getPacket(filterCommandProtocol), this.filter.getPacket(filterCommandProtocol)])
     return filterPacket;
   }
 

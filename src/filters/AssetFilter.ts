@@ -101,6 +101,16 @@ export class AssetFilter {
 
 
   /**
+   * If an advertisement passes the filter, the Crownstone will send a report containing the mac address and rssi of the source of the advertisement to the hub.
+   */
+  doNotOutput() : AssetFilter {
+    this._ensureMetaData();
+    this.metaData.outputDescription = new FilterOutputDescription(FilterOutputDescriptionType.MAC_ADDRESS_REPORT);
+    return this;
+  }
+
+
+  /**
    * If an advertisement passes the filter, it will be passed on to the in-network localization algorithms and referred to as a 3 byte short id
    * basedOn will allow you to determine which identifying data will be used to construct this shortId.
    *
@@ -109,7 +119,7 @@ export class AssetFilter {
    */
   outputTrackableShortId(basedOn: FilterFormatMacAddress | FilterFormatFullAdData | FilterFormatMaskedAdData) : AssetFilter {
     this._ensureMetaData();
-    this.metaData.outputDescription = new FilterOutputDescription(FilterOutputDescriptionType.ASSET_ID_TRACK, basedOn)
+    this.metaData.outputDescription = new FilterOutputDescription(FilterOutputDescriptionType.ASSET_ID_REPORT, basedOn)
     return this;
   }
 

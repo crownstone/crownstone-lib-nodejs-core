@@ -1,15 +1,15 @@
 # crownstone-lib-nodejs-core
-core shared code for the bluenet nodejs lib modules
 
-# WORK IN PROGRESS
-Do not use in current state. The bluenet-nodejs-lib is in the process of being separated into individual modules:
-- crownstone-lib-nodejs-core
-- crownstone-lib-nodejs-uart
-- crownstone-lib-nodejs-ble
-- crownstone-lib-nodejs-cloud
-- crownstone-lib-nodejs-sse
+Core module for the nodejs libs. It contains shared classes, definitions and utils. This is not intended for direct use by external
+parties. Take a a look at the specialized UART, cloud, BLE, SSE libraries for your purpose.
 
-Will be usable on release 1.0.
+# Overview of the nodejs modules
+
+- https://github.com/crownstone/crownstone-lib-nodejs-core
+- https://github.com/crownstone/crownstone-lib-nodejs-uart
+- https://github.com/crownstone/crownstone-lib-nodejs-ble
+- https://github.com/crownstone/crownstone-lib-nodejs-cloud
+- https://github.com/crownstone/crownstone-lib-nodejs-sse
 
 # License
 
